@@ -20,7 +20,7 @@ import {
   LayoutGrid,
 } from 'lucide-react';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
 
 interface HarnessProduct {
   id: string;
@@ -102,12 +102,12 @@ export default function HarnessManagement() {
 
     setSubmitting(true);
     try {
-      const url = editingProduct 
+      const url = editingProduct
         ? `${API_BASE}/harness/${editingProduct.id}`
         : `${API_BASE}/harness/`;
-      
+
       const method = editingProduct ? 'PUT' : 'POST';
-      
+
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
@@ -184,7 +184,7 @@ export default function HarnessManagement() {
     document.body.removeChild(link);
   };
 
-  const filteredProducts = products.filter(p => 
+  const filteredProducts = products.filter(p =>
     p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.applications.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -200,7 +200,7 @@ export default function HarnessManagement() {
     if (!imagePath) return '/placeholder.png';
     if (imagePath.startsWith('http')) return imagePath;
     if (imagePath.startsWith('/uploads/')) {
-      return `http://localhost:8000${imagePath}`;
+      return `https://aaj-tech-backend.onrender.com${imagePath}`;
     }
     return imagePath; // Local public folder paths
   };
@@ -344,7 +344,7 @@ export default function HarnessManagement() {
                 >
                   <Edit2 size={16} />
                 </button>
-                <button 
+                <button
                   onClick={() => handleDelete(product.id)}
                   className="p-2 bg-white/90 hover:bg-red-50 text-brand-red rounded-xl backdrop-blur-sm shadow-sm transition-colors"
                 >
@@ -353,22 +353,22 @@ export default function HarnessManagement() {
               </div>
 
               <div className="w-full h-40 rounded-2xl overflow-hidden mb-6 relative bg-gray-50 flex items-center justify-center p-4">
-                <img 
-                  src={getImageUrl(product.image)} 
-                  alt={product.title} 
-                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
+                <img
+                  src={getImageUrl(product.image)}
+                  alt={product.title}
+                  className="w-full h-full object-contain mix-blend-multiply group-hover:scale-105 transition-transform duration-500"
                 />
               </div>
 
               <div className="flex-1 flex flex-col">
                 <h3 className="font-black text-brand-dark text-xl mb-2 line-clamp-1 group-hover:text-brand-red transition-colors">{product.title}</h3>
                 <p className="text-gray-400 text-sm font-medium line-clamp-2 mb-4">{product.applications}</p>
-                
+
                 <div className="mt-auto pt-4 border-t border-gray-100 flex items-center justify-between">
                   <span className="text-[10px] font-black uppercase tracking-widest text-brand-red">{product.variants.length} Variants</span>
                   <div className="flex -space-x-2">
                     {[1, 2, 3].map(j => (
-                       <div key={j} className="w-6 h-6 rounded-full border-2 border-white bg-gray-100" />
+                      <div key={j} className="w-6 h-6 rounded-full border-2 border-white bg-gray-100" />
                     ))}
                   </div>
                 </div>
@@ -428,10 +428,10 @@ export default function HarnessManagement() {
             >
               <div className="bg-brand-dark p-8 text-white flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                   <div className="w-12 h-12 bg-brand-red rounded-xl flex items-center justify-center shadow-lg shadow-brand-red/20">
-                     <Plus size={24} />
-                   </div>
-                   <h2 className="text-2xl font-black">{editingProduct ? 'Edit Harness' : 'Add Harness'}</h2>
+                  <div className="w-12 h-12 bg-brand-red rounded-xl flex items-center justify-center shadow-lg shadow-brand-red/20">
+                    <Plus size={24} />
+                  </div>
+                  <h2 className="text-2xl font-black">{editingProduct ? 'Edit Harness' : 'Add Harness'}</h2>
                 </div>
                 <button onClick={() => setIsAddModalOpen(false)} className="w-12 h-12 bg-white/10 hover:bg-white/20 rounded-xl flex items-center justify-center transition-all">
                   <X size={24} />

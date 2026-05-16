@@ -32,17 +32,17 @@ export default function EnquiryManagement({ filterType }: { filterType?: string 
 
   const fetchEnquiries = React.useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/enquiries/');
+      const res = await fetch('https://aaj-tech-backend.onrender.com/api/enquiries/');
       if (res.ok) {
         let data = await res.json();
-        
+
         // Apply filter if filterType is provided
         if (filterType === 'order') {
           data = data.filter((enq: Enquiry) => enq.inquiryType === 'Product Order Inquiry');
         } else if (filterType === 'general') {
           data = data.filter((enq: Enquiry) => enq.inquiryType !== 'Product Order Inquiry');
         }
-        
+
         setEnquiries(data);
       }
     } catch (err) {
@@ -57,7 +57,7 @@ export default function EnquiryManagement({ filterType }: { filterType?: string 
 
   const updateStatus = async (id: string, status: string) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/enquiries/${id}/status?status=${status}`, {
+      const res = await fetch(`https://aaj-tech-backend.onrender.com/api/enquiries/${id}/status?status=${status}`, {
         method: 'PUT',
       });
       if (res.ok) {
@@ -72,7 +72,7 @@ export default function EnquiryManagement({ filterType }: { filterType?: string 
   const deleteEnquiry = async (id: string) => {
     if (!confirm('Are you sure?')) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/enquiries/${id}`, {
+      const res = await fetch(`https://aaj-tech-backend.onrender.com/api/enquiries/${id}`, {
         method: 'DELETE',
       });
       if (res.ok) {
@@ -92,8 +92,8 @@ export default function EnquiryManagement({ filterType }: { filterType?: string 
           {filterType === 'order' ? 'Order Inquiries' : filterType === 'general' ? 'General Enquiries' : 'All Enquiries'}
         </h1>
         <p className="text-gray-400 font-bold">
-          {filterType === 'order' 
-            ? 'Track and respond to product purchase requests and RFQs.' 
+          {filterType === 'order'
+            ? 'Track and respond to product purchase requests and RFQs.'
             : 'Manage general contact messages and service inquiries.'}
         </p>
       </div>
@@ -155,8 +155,8 @@ export default function EnquiryManagement({ filterType }: { filterType?: string 
                   </td>
                   <td className="px-6 py-6">
                     <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${enq.status === 'New' ? 'bg-blue-50 text-blue-600' :
-                        enq.status === 'Replied' ? 'bg-orange-50 text-orange-600' :
-                          'bg-green-50 text-green-600'
+                      enq.status === 'Replied' ? 'bg-orange-50 text-orange-600' :
+                        'bg-green-50 text-green-600'
                       }`}>
                       {enq.status}
                     </span>

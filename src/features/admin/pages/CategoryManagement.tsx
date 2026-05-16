@@ -1,18 +1,18 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  Plus, 
-  Trash2, 
-  Layers, 
-  X, 
+import {
+  Plus,
+  Trash2,
+  Layers,
+  X,
   Check,
   Type,
   Loader2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
 
 interface Category {
   id: string;
@@ -56,8 +56,8 @@ const CategoryManagement = () => {
       const res = await fetch(`${API_BASE}/categories/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name: newCategoryName.trim(), 
+        body: JSON.stringify({
+          name: newCategoryName.trim(),
           count: 0,
           icon: 'Layers' // default icon
         }),
@@ -97,7 +97,7 @@ const CategoryManagement = () => {
           <h1 className="text-4xl font-black text-brand-dark mb-2 tracking-tight">Categories</h1>
           <p className="text-gray-400 font-bold">Quickly manage your product category list.</p>
         </div>
-        <button 
+        <button
           onClick={() => setShowAddModal(true)}
           className="bg-brand-red hover:bg-brand-red/90 text-white font-black px-8 py-4 rounded-2xl flex items-center justify-center gap-3 shadow-xl shadow-brand-red/20 transition-all active:scale-95"
         >
@@ -120,7 +120,7 @@ const CategoryManagement = () => {
         /* Categories Grid */
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {categories.map((cat) => (
-            <motion.div 
+            <motion.div
               layout
               key={cat.id}
               className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all group flex items-center justify-between"
@@ -134,9 +134,9 @@ const CategoryManagement = () => {
                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{cat.count} Items</p>
                 </div>
               </div>
-              
+
               <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                <button 
+                <button
                   onClick={() => handleDeleteCategory(cat.id)}
                   className="p-2 hover:bg-red-50 text-brand-red rounded-lg"
                 >
@@ -152,15 +152,15 @@ const CategoryManagement = () => {
       <AnimatePresence>
         {showAddModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowAddModal(false)}
               className="absolute inset-0 bg-brand-dark/80 backdrop-blur-sm"
             />
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
@@ -177,8 +177,8 @@ const CategoryManagement = () => {
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
                       <Type size={12} className="text-brand-red" /> Name
                     </label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       autoFocus
                       value={newCategoryName}
                       onChange={(e) => setNewCategoryName(e.target.value)}
@@ -187,7 +187,7 @@ const CategoryManagement = () => {
                     />
                   </div>
 
-                  <button 
+                  <button
                     type="submit"
                     disabled={submitting || !newCategoryName.trim()}
                     className="w-full bg-brand-red hover:bg-brand-dark text-white py-4 rounded-2xl font-black transition-all shadow-lg shadow-brand-red/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"

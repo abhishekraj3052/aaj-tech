@@ -20,7 +20,7 @@ const Navbar = () => {
     let isMounted = true;
     const fetchCategories = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/categories/');
+        const res = await fetch('https://aaj-tech-backend.onrender.com/api/categories/');
         if (!res.ok) throw new Error('Failed to fetch');
         const categories = await res.json();
 
@@ -85,9 +85,9 @@ const Navbar = () => {
         >
           <Link href="/" className="block group">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img 
-              src="/logo.png" 
-              alt="AAJ Tech Trading Logo" 
+            <img
+              src="/logo.png"
+              alt="AAJ Tech Trading Logo"
               className="h-24 md:h-28 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
             />
           </Link>

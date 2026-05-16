@@ -5,12 +5,12 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ArrowLeft, 
-  Calendar, 
+import {
+  ArrowLeft,
+  Calendar,
 
-  Clock, 
-  Share2, 
+  Clock,
+  Share2,
   MessageSquare,
   Globe,
   Link as LinkIcon,
@@ -19,7 +19,7 @@ import {
   Loader2
 } from 'lucide-react';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
 
 interface BlogPost {
   id: string;
@@ -57,12 +57,12 @@ const BlogDetail = () => {
           fetch(`${API_BASE}/blogs/${id}`),
           fetch(`${API_BASE}/blogs/`)
         ]);
-        
+
         if (postRes.ok && isMounted) {
           const postData = await postRes.json();
           setPost(postData);
         }
-        
+
         if (allRes.ok && isMounted) {
           const allData = await allRes.json();
           setRelatedPosts(Array.isArray(allData) ? allData.filter((p: BlogPost) => p.id !== id).slice(0, 3) : []);
@@ -111,26 +111,26 @@ const BlogDetail = () => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/40 to-transparent" />
         </div>
-        
+
         <div className="container mx-auto px-4 md:px-12 lg:px-24 relative z-10 pb-16 md:pb-24">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <Link 
-              href="/blog" 
+            <Link
+              href="/blog"
               className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-8 font-black uppercase tracking-widest text-xs transition-all hover:-translate-x-2"
             >
               <ArrowLeft size={16} /> Back to Blog
             </Link>
-            
+
             <div className="flex flex-wrap items-center gap-4 md:gap-6 text-white/80 text-xs font-black uppercase tracking-[0.2em] mb-6">
               <span className="bg-brand-red text-white px-4 py-1.5 rounded-full">{post.category}</span>
               <span className="flex items-center gap-2"><Calendar size={14} className="text-brand-red" /> {post.date}</span>
               <span className="flex items-center gap-2"><Clock size={14} className="text-brand-red" /> {post.read_time}</span>
             </div>
-            
+
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[0.9] tracking-tighter max-w-5xl">
               {post.title}
             </h1>
@@ -141,9 +141,9 @@ const BlogDetail = () => {
       {/* Content Section */}
       <section className="py-24 container mx-auto px-4 md:px-12 lg:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          
+
           {/* Main Article */}
-          <motion.article 
+          <motion.article
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -180,12 +180,12 @@ const BlogDetail = () => {
                   </span>
                 ))}
               </div>
-              
+
               <div className="flex items-center gap-4">
                 <span className="text-brand-dark font-black uppercase tracking-widest text-xs">Share Article</span>
                 <div className="flex gap-2">
                   {/* LinkedIn Share */}
-                  <button 
+                  <button
                     onClick={() => {
                       const url = window.location.href;
                       window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
@@ -197,11 +197,10 @@ const BlogDetail = () => {
                   </button>
 
                   {/* Copy Link */}
-                  <button 
+                  <button
                     onClick={handleCopy}
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-sm ${
-                      copied ? 'bg-green-500 text-white' : 'bg-brand-light text-brand-red hover:bg-brand-red hover:text-white'
-                    }`}
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all shadow-sm ${copied ? 'bg-green-500 text-white' : 'bg-brand-light text-brand-red hover:bg-brand-red hover:text-white'
+                      }`}
                     title="Copy Link"
                   >
                     <AnimatePresence mode="wait">
@@ -228,7 +227,7 @@ const BlogDetail = () => {
                   </button>
 
                   {/* Native Share */}
-                  <button 
+                  <button
                     onClick={async () => {
                       if (navigator.share) {
                         try {
@@ -295,8 +294,8 @@ const BlogDetail = () => {
                 <p className="text-gray-500 text-sm mb-8 font-medium leading-relaxed">
                   Our experts are ready to help you with any technical questions.
                 </p>
-                <Link 
-                  href="/contact" 
+                <Link
+                  href="/contact"
                   className="inline-flex items-center gap-2 text-brand-red font-black uppercase tracking-widest text-xs group-hover:gap-4 transition-all"
                 >
                   Contact Support <ArrowLeft className="rotate-180" size={16} />
@@ -312,8 +311,8 @@ const BlogDetail = () => {
       <section className="py-24 bg-brand-red">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl md:text-5xl font-black text-white mb-8 tracking-tight uppercase">Ready to upgrade your technology?</h2>
-          <Link 
-            href="/products" 
+          <Link
+            href="/products"
             className="inline-flex bg-white text-brand-red px-12 py-5 rounded-full font-black text-lg shadow-2xl hover:scale-105 active:scale-95 transition-all uppercase tracking-widest"
           >
             Explore Our Products

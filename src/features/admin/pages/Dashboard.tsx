@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Package, 
-  MessageSquare, 
-  Users, 
-  TrendingUp, 
-  ArrowUpRight, 
+import {
+  Package,
+  MessageSquare,
+  Users,
+  TrendingUp,
+  ArrowUpRight,
   Clock
 } from 'lucide-react';
 import { Loader2 } from 'lucide-react';
@@ -45,7 +45,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/dashboard/');
+        const res = await fetch('https://aaj-tech-backend.onrender.com/api/dashboard/');
         if (res.ok) {
           const dashboardData = await res.json();
           setData(dashboardData);
@@ -86,7 +86,7 @@ export default function Dashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {statsConfig.map((stat, idx) => (
-          <motion.div 
+          <motion.div
             key={stat.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -146,13 +146,11 @@ export default function Dashboard() {
                       </td>
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-3">
-                          <span className={`w-2 h-2 rounded-full shrink-0 ${
-                            enq.status === 'new' ? 'bg-brand-red' :
-                            enq.status === 'in progress' ? 'bg-orange-400' : 'bg-green-400'
-                          }`} />
-                          <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${
-                            enq.status === 'new' ? 'bg-red-50 text-brand-red' : 'bg-green-50 text-green-600'
-                          }`}>
+                          <span className={`w-2 h-2 rounded-full shrink-0 ${enq.status === 'new' ? 'bg-brand-red' :
+                              enq.status === 'in progress' ? 'bg-orange-400' : 'bg-green-400'
+                            }`} />
+                          <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${enq.status === 'new' ? 'bg-red-50 text-brand-red' : 'bg-green-50 text-green-600'
+                            }`}>
                             {enq.status}
                           </span>
                         </div>
@@ -177,9 +175,8 @@ export default function Dashboard() {
                 {idx !== data.recentActivities.length - 1 && (
                   <div className="absolute left-2.5 top-8 bottom-0 w-0.5 bg-gray-100" />
                 )}
-                <div className={`w-5 h-5 rounded-full border-2 border-white shadow-sm mt-1 shrink-0 ${
-                  activity.user === 'System' ? 'bg-blue-500' : 'bg-brand-red'
-                }`} />
+                <div className={`w-5 h-5 rounded-full border-2 border-white shadow-sm mt-1 shrink-0 ${activity.user === 'System' ? 'bg-blue-500' : 'bg-brand-red'
+                  }`} />
                 <div>
                   <p className="text-sm font-bold text-brand-dark">
                     {activity.user} <span className="text-gray-400 font-medium">{activity.action}</span> {activity.target}

@@ -21,7 +21,7 @@ export const ClientManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
-  
+
   // Search, Filter, View Mode
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('All');
@@ -39,7 +39,7 @@ export const ClientManagement = () => {
 
   const fetchClients = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/clients/');
+      const res = await fetch('https://aaj-tech-backend.onrender.com/api/clients/');
       const data = await res.json();
       setClients(data);
     } catch {
@@ -91,9 +91,9 @@ export const ClientManagement = () => {
     setIsSubmitting(true);
     try {
       const method = editingClient ? 'PUT' : 'POST';
-      const url = editingClient 
-        ? `http://localhost:8000/api/clients/${editingClient.id}` 
-        : 'http://localhost:8000/api/clients/';
+      const url = editingClient
+        ? `https://aaj-tech-backend.onrender.com/api/clients/${editingClient.id}`
+        : 'https://aaj-tech-backend.onrender.com/api/clients/';
 
       const res = await fetch(url, {
         method,
@@ -115,7 +115,7 @@ export const ClientManagement = () => {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this client?')) return;
     try {
-      const res = await fetch(`http://localhost:8000/api/clients/${id}`, {
+      const res = await fetch(`https://aaj-tech-backend.onrender.com/api/clients/${id}`, {
         method: 'DELETE'
       });
       if (res.ok) {
@@ -127,8 +127,8 @@ export const ClientManagement = () => {
   };
 
   const filteredClients = clients.filter(client => {
-    const matchesSearch = client.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          (client.location && client.location.toLowerCase().includes(searchQuery.toLowerCase()));
+    const matchesSearch = client.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (client.location && client.location.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesFilter = filterType === 'All' || client.type === filterType;
     return matchesSearch && matchesFilter;
   });
@@ -142,7 +142,7 @@ export const ClientManagement = () => {
           <h1 className="text-3xl font-black text-brand-dark mb-2">Clients & Distributors</h1>
           <p className="text-gray-400 font-bold">Manage your global network of partners and clients.</p>
         </div>
-        <button 
+        <button
           onClick={() => handleOpenModal()}
           className="bg-brand-red text-white font-black px-6 py-4 rounded-2xl flex items-center justify-center gap-3 shadow-lg shadow-brand-red/20 hover:bg-brand-red/90 transition-all hover:scale-105 active:scale-95"
         >
@@ -155,9 +155,9 @@ export const ClientManagement = () => {
         <div className="flex flex-1 w-full md:w-auto gap-4">
           <div className="relative flex-1 max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search clients..." 
+            <input
+              type="text"
+              placeholder="Search clients..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-gray-50 border-none rounded-xl py-3 pl-12 pr-4 text-sm font-bold text-brand-dark focus:ring-2 focus:ring-brand-red outline-none transition-all"
@@ -165,7 +165,7 @@ export const ClientManagement = () => {
           </div>
           <div className="relative">
             <Filter className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-            <select 
+            <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
               className="appearance-none bg-gray-50 border-none rounded-xl py-3 pl-12 pr-10 text-sm font-bold text-brand-dark focus:ring-2 focus:ring-brand-red outline-none transition-all cursor-pointer"
@@ -174,16 +174,16 @@ export const ClientManagement = () => {
             </select>
           </div>
         </div>
-        
+
         <div className="flex items-center gap-2 bg-gray-50 p-1 rounded-xl self-end md:self-auto">
-          <button 
+          <button
             onClick={() => setViewMode('grid')}
             className={`p-2 rounded-lg transition-all ${viewMode === 'grid' ? 'bg-white shadow-sm text-brand-red' : 'text-gray-400 hover:text-brand-dark'}`}
             title="Grid View"
           >
             <LayoutGrid size={18} />
           </button>
-          <button 
+          <button
             onClick={() => setViewMode('table')}
             className={`p-2 rounded-lg transition-all ${viewMode === 'table' ? 'bg-white shadow-sm text-brand-red' : 'text-gray-400 hover:text-brand-dark'}`}
             title="Table View"
@@ -213,80 +213,80 @@ export const ClientManagement = () => {
       ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredClients.map((client, i) => (
-            <motion.div 
+            <motion.div
               key={client.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
               className="bg-white p-8 rounded-[40px] border border-gray-100 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all"
             >
-               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-red/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 transition-transform group-hover:scale-150" />
-               
-               {/* Actions */}
-               <div className="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                 <button onClick={() => handleOpenModal(client)} className="p-2 bg-white/80 hover:bg-blue-50 text-blue-600 rounded-xl backdrop-blur-sm shadow-sm transition-colors">
-                   <Edit2 size={16} />
-                 </button>
-                 <button onClick={() => handleDelete(client.id)} className="p-2 bg-white/80 hover:bg-red-50 text-brand-red rounded-xl backdrop-blur-sm shadow-sm transition-colors">
-                   <Trash2 size={16} />
-                 </button>
-               </div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-red/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 transition-transform group-hover:scale-150" />
 
-               <div className="flex items-center gap-4 mb-6 relative z-10">
-                 <div className="w-16 h-16 bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden flex-shrink-0 flex items-center justify-center p-2">
-                    {client.image ? (
-                      <>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={client.image} alt={client.name} className="w-full h-full object-contain" />
-                      </>
-                    ) : (
-                      <Building2 className="text-gray-300" size={32} />
-                    )}
-                 </div>
-                 <div className="pr-12">
-                   <p className="font-black text-brand-dark text-lg leading-tight mb-1">{client.name}</p>
-                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{client.type}</p>
-                 </div>
-               </div>
+              {/* Actions */}
+              <div className="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                <button onClick={() => handleOpenModal(client)} className="p-2 bg-white/80 hover:bg-blue-50 text-blue-600 rounded-xl backdrop-blur-sm shadow-sm transition-colors">
+                  <Edit2 size={16} />
+                </button>
+                <button onClick={() => handleDelete(client.id)} className="p-2 bg-white/80 hover:bg-red-50 text-brand-red rounded-xl backdrop-blur-sm shadow-sm transition-colors">
+                  <Trash2 size={16} />
+                </button>
+              </div>
 
-               {client.description && (
-                 <p className="text-sm text-gray-500 font-medium mb-6 line-clamp-2 leading-relaxed">
-                   {client.description}
-                 </p>
-               )}
+              <div className="flex items-center gap-4 mb-6 relative z-10">
+                <div className="w-16 h-16 bg-gray-50 rounded-2xl border border-gray-100 overflow-hidden flex-shrink-0 flex items-center justify-center p-2">
+                  {client.image ? (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={client.image} alt={client.name} className="w-full h-full object-contain" />
+                    </>
+                  ) : (
+                    <Building2 className="text-gray-300" size={32} />
+                  )}
+                </div>
+                <div className="pr-12">
+                  <p className="font-black text-brand-dark text-lg leading-tight mb-1">{client.name}</p>
+                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{client.type}</p>
+                </div>
+              </div>
 
-               <div className="space-y-4 mb-8">
-                 <div className="flex items-center gap-3 text-sm">
-                   <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
-                     <MapPin size={14} />
-                   </div>
-                   <div className="flex-1">
-                     <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest">Location</span>
-                     <span className="text-brand-dark font-bold">{client.location || 'N/A'}</span>
-                   </div>
-                 </div>
-                 
-                 <div className="flex items-center gap-3 text-sm">
-                   <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
-                     <Package size={14} />
-                   </div>
-                   <div className="flex-1">
-                     <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Orders</span>
-                     <span className="text-brand-dark font-bold">{client.totalOrders || '0'}</span>
-                   </div>
-                 </div>
-               </div>
+              {client.description && (
+                <p className="text-sm text-gray-500 font-medium mb-6 line-clamp-2 leading-relaxed">
+                  {client.description}
+                </p>
+              )}
 
-               {client.website && (
-                 <a 
-                   href={client.website.startsWith('http') ? client.website : `https://${client.website}`}
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   className="w-full py-4 bg-gray-50 hover:bg-brand-dark hover:text-white rounded-2xl font-black text-sm transition-all text-brand-dark uppercase tracking-widest flex items-center justify-center gap-2"
-                 >
-                   <Globe size={16} /> Visit Website
-                 </a>
-               )}
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
+                    <MapPin size={14} />
+                  </div>
+                  <div className="flex-1">
+                    <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest">Location</span>
+                    <span className="text-brand-dark font-bold">{client.location || 'N/A'}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400">
+                    <Package size={14} />
+                  </div>
+                  <div className="flex-1">
+                    <span className="block text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Orders</span>
+                    <span className="text-brand-dark font-bold">{client.totalOrders || '0'}</span>
+                  </div>
+                </div>
+              </div>
+
+              {client.website && (
+                <a
+                  href={client.website.startsWith('http') ? client.website : `https://${client.website}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-4 bg-gray-50 hover:bg-brand-dark hover:text-white rounded-2xl font-black text-sm transition-all text-brand-dark uppercase tracking-widest flex items-center justify-center gap-2"
+                >
+                  <Globe size={16} /> Visit Website
+                </a>
+              )}
             </motion.div>
           ))}
         </div>
@@ -309,14 +309,14 @@ export const ClientManagement = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-gray-50 rounded-xl border border-gray-100 overflow-hidden flex-shrink-0 flex items-center justify-center p-2">
-                           {client.image ? (
-                             <>
-                               {/* eslint-disable-next-line @next/next/no-img-element */}
-                               <img src={client.image} alt={client.name} className="w-full h-full object-contain" />
-                             </>
-                           ) : (
-                             <Building2 className="text-gray-300" size={20} />
-                           )}
+                          {client.image ? (
+                            <>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={client.image} alt={client.name} className="w-full h-full object-contain" />
+                            </>
+                          ) : (
+                            <Building2 className="text-gray-300" size={20} />
+                          )}
                         </div>
                         <div>
                           <p className="font-bold text-brand-dark text-sm">{client.name}</p>
@@ -378,7 +378,7 @@ export const ClientManagement = () => {
                 <h2 className="text-xl font-black text-brand-dark uppercase tracking-tight">
                   {editingClient ? 'Edit Client Profile' : 'Add New Client'}
                 </h2>
-                <button 
+                <button
                   onClick={handleCloseModal}
                   className="p-2 hover:bg-gray-200 rounded-full text-gray-500 transition-colors"
                 >
@@ -395,7 +395,7 @@ export const ClientManagement = () => {
                         type="text"
                         required
                         value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-brand-dark font-medium focus:ring-2 focus:ring-brand-red outline-none"
                         placeholder="e.g. Partner Corp"
                       />
@@ -404,7 +404,7 @@ export const ClientManagement = () => {
                       <label className="block text-xs font-black text-brand-dark uppercase tracking-widest mb-2">Client Type</label>
                       <select
                         value={formData.type}
-                        onChange={(e) => setFormData({...formData, type: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-brand-dark font-medium focus:ring-2 focus:ring-brand-red outline-none"
                       >
                         <option value="Client">Client</option>
@@ -421,7 +421,7 @@ export const ClientManagement = () => {
                       <input
                         type="text"
                         value={formData.location}
-                        onChange={(e) => setFormData({...formData, location: e.target.value})}
+                        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-brand-dark font-medium focus:ring-2 focus:ring-brand-red outline-none"
                         placeholder="e.g. Berlin, DE"
                       />
@@ -432,7 +432,7 @@ export const ClientManagement = () => {
                         type="number"
                         min="0"
                         value={formData.totalOrders}
-                        onChange={(e) => setFormData({...formData, totalOrders: parseInt(e.target.value) || 0})}
+                        onChange={(e) => setFormData({ ...formData, totalOrders: parseInt(e.target.value) || 0 })}
                         className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-brand-dark font-medium focus:ring-2 focus:ring-brand-red outline-none"
                       />
                     </div>
@@ -443,7 +443,7 @@ export const ClientManagement = () => {
                     <input
                       type="url"
                       value={formData.image}
-                      onChange={(e) => setFormData({...formData, image: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-brand-dark font-medium focus:ring-2 focus:ring-brand-red outline-none"
                       placeholder="https://example.com/logo.png"
                     />
@@ -455,7 +455,7 @@ export const ClientManagement = () => {
                     <input
                       type="url"
                       value={formData.website}
-                      onChange={(e) => setFormData({...formData, website: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-brand-dark font-medium focus:ring-2 focus:ring-brand-red outline-none"
                       placeholder="https://example.com"
                     />
@@ -466,7 +466,7 @@ export const ClientManagement = () => {
                     <textarea
                       rows={3}
                       value={formData.description}
-                      onChange={(e) => setFormData({...formData, description: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                       className="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 px-4 text-brand-dark font-medium focus:ring-2 focus:ring-brand-red outline-none resize-none"
                       placeholder="Brief details about the client relationship..."
                     />

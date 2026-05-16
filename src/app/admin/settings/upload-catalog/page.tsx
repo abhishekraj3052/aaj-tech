@@ -31,7 +31,7 @@ export default function UploadCatalogPage() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8000/api/catalog/upload', {
+      const response = await fetch('https://aaj-tech-backend.onrender.com/api/catalog/upload', {
         method: 'POST',
         body: formData,
       });
@@ -61,25 +61,23 @@ export default function UploadCatalogPage() {
       </div>
 
       <div className="bg-white rounded-[40px] border border-gray-100 p-12 shadow-sm">
-        <div 
-          className={`border-4 border-dashed rounded-[32px] p-16 text-center transition-all ${
-            file ? 'border-green-100 bg-green-50/30' : 'border-gray-50 hover:border-brand-red/20 hover:bg-brand-red/[0.02]'
-          }`}
+        <div
+          className={`border-4 border-dashed rounded-[32px] p-16 text-center transition-all ${file ? 'border-green-100 bg-green-50/30' : 'border-gray-50 hover:border-brand-red/20 hover:bg-brand-red/[0.02]'
+            }`}
         >
-          <input 
-            type="file" 
-            id="catalog-upload" 
-            className="hidden" 
+          <input
+            type="file"
+            id="catalog-upload"
+            className="hidden"
             accept=".pdf"
             onChange={handleFileChange}
           />
           <label htmlFor="catalog-upload" className="cursor-pointer">
-            <div className={`w-20 h-20 mx-auto rounded-3xl flex items-center justify-center mb-6 transition-all ${
-              file ? 'bg-green-500 text-white' : 'bg-brand-light text-brand-red'
-            }`}>
+            <div className={`w-20 h-20 mx-auto rounded-3xl flex items-center justify-center mb-6 transition-all ${file ? 'bg-green-500 text-white' : 'bg-brand-light text-brand-red'
+              }`}>
               {file ? <FileText size={32} /> : <Upload size={32} />}
             </div>
-            
+
             {file ? (
               <div className="space-y-2">
                 <p className="text-xl font-black text-brand-dark">{file.name}</p>
@@ -95,8 +93,8 @@ export default function UploadCatalogPage() {
         </div>
 
         {status === 'success' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-8 p-4 bg-green-50 text-green-700 rounded-2xl flex items-center gap-3 font-bold"
           >
@@ -105,8 +103,8 @@ export default function UploadCatalogPage() {
         )}
 
         {status === 'error' && (
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="mt-8 p-4 bg-red-50 text-brand-red rounded-2xl flex items-center gap-3 font-bold"
           >
@@ -118,11 +116,10 @@ export default function UploadCatalogPage() {
           <button
             onClick={handleUpload}
             disabled={!file || uploading}
-            className={`px-12 py-5 rounded-full font-black text-lg transition-all flex items-center gap-3 ${
-              !file || uploading 
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+            className={`px-12 py-5 rounded-full font-black text-lg transition-all flex items-center gap-3 ${!file || uploading
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 : 'bg-brand-red text-white hover:bg-brand-red-hover shadow-xl shadow-brand-red/20 active:scale-95'
-            }`}
+              }`}
           >
             {uploading ? (
               <>

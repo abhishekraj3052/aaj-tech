@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { 
-  Download, 
-  BookOpen, 
+import {
+  Download,
+  BookOpen,
   ArrowRight,
   Shield,
   Zap,
@@ -30,7 +30,7 @@ const CatalogPage = () => {
   useEffect(() => {
     const fetchCatalogs = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/catalog/');
+        const response = await fetch('https://aaj-tech-backend.onrender.com/api/catalog/');
         const data = await response.json();
         setCatalogs(data);
         if (data.length > 0) {
@@ -53,7 +53,7 @@ const CatalogPage = () => {
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-red rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
           <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand-red rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2"></div>
         </div>
-        
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl text-center md:text-left">
             <motion.div
@@ -64,8 +64,8 @@ const CatalogPage = () => {
               <BookOpen size={14} className="text-brand-red" />
               Resource Center
             </motion.div>
-            
-            <motion.h1 
+
+            <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
@@ -74,8 +74,8 @@ const CatalogPage = () => {
               PRODUCT <br />
               <span className="text-brand-red">CATALOG</span>
             </motion.h1>
-            
-            <motion.p 
+
+            <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -91,8 +91,8 @@ const CatalogPage = () => {
       <section className="py-24 container mx-auto px-4">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40">
-             <Loader2 className="w-12 h-12 text-brand-red animate-spin mb-4" />
-             <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Loading Catalogs...</p>
+            <Loader2 className="w-12 h-12 text-brand-red animate-spin mb-4" />
+            <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Loading Catalogs...</p>
           </div>
         ) : activeCatalog ? (
           <div className="space-y-16">
@@ -103,11 +103,10 @@ const CatalogPage = () => {
                   <button
                     key={cat.url}
                     onClick={() => setActiveCatalog(cat)}
-                    className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${
-                      activeCatalog.url === cat.url 
-                        ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20' 
+                    className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${activeCatalog.url === cat.url
+                        ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20'
                         : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                    }`}
+                      }`}
                   >
                     {cat.name}
                   </button>
@@ -117,13 +116,13 @@ const CatalogPage = () => {
 
             <div>
               <div className="bg-gray-50 rounded-[4rem] p-8 md:p-20 border border-gray-100 shadow-inner overflow-hidden">
-                <Flipbook pdfUrl={`http://localhost:8000${activeCatalog.url}`} />
+                <Flipbook pdfUrl={`https://aaj-tech-backend.onrender.com${activeCatalog.url}`} />
               </div>
             </div>
 
             <div className="flex justify-center">
-              <a 
-                href={`http://localhost:8000${activeCatalog.url}`} 
+              <a
+                href={`https://aaj-tech-backend.onrender.com${activeCatalog.url}`}
                 download
                 className="inline-flex items-center gap-4 bg-brand-dark text-white px-12 py-5 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition-all uppercase tracking-widest"
               >
@@ -134,7 +133,7 @@ const CatalogPage = () => {
         ) : (
           <div className="text-center py-40 bg-gray-50 rounded-[4rem] border border-gray-100">
             <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm">
-               <Book size={40} className="text-gray-200" />
+              <Book size={40} className="text-gray-200" />
             </div>
             <h3 className="text-2xl font-black text-brand-dark mb-4 uppercase tracking-tight">No Catalog Available</h3>
             <p className="text-gray-400 font-medium max-w-md mx-auto">We are currently updating our product catalog. Please check back soon or contact our support team.</p>
@@ -153,7 +152,7 @@ const CatalogPage = () => {
             <p className="text-gray-400 text-xl font-medium mb-12 max-w-2xl mx-auto">
               Our technical team can provide customized datasheets and drawings for your specific industrial requirements.
             </p>
-            <Link 
+            <Link
               href="/contact"
               className="inline-flex items-center gap-4 bg-brand-red text-white px-16 py-7 rounded-full font-black text-xl shadow-[0_20px_50px_rgba(210,35,42,0.3)] hover:scale-110 transition-all duration-300 uppercase tracking-widest"
             >

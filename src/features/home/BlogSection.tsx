@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Reveal } from '@/components/common/Reveal';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
 
 interface BlogPost {
   id: string;
@@ -138,13 +138,13 @@ const BlogSection = () => {
           {/* Slider Controls */}
           {blogs.length > visibleCards && (
             <>
-              <button 
+              <button
                 onClick={prevSlide}
                 className="absolute -left-4 md:-left-12 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-brand-dark hover:bg-brand-red hover:text-white transition-all opacity-0 group-hover:opacity-100 -translate-x-4 group-hover:translate-x-0 border border-gray-100"
               >
                 <ChevronLeft size={24} />
               </button>
-              <button 
+              <button
                 onClick={nextSlide}
                 className="absolute -right-4 md:-right-12 top-1/2 -translate-y-1/2 z-20 w-14 h-14 bg-white rounded-full shadow-2xl flex items-center justify-center text-brand-dark hover:bg-brand-red hover:text-white transition-all opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 border border-gray-100"
               >
@@ -154,15 +154,15 @@ const BlogSection = () => {
           )}
 
           <div className="overflow-hidden px-2 py-10 -mx-2">
-            <motion.div 
+            <motion.div
               className="flex gap-8"
               animate={{ x: `calc(-${currentIndex * (100 / visibleCards)}% - ${currentIndex * (32 / visibleCards)}px)` }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
               style={{ width: blogs.length > visibleCards ? `${(blogs.length / visibleCards) * 100}%` : '100%' }}
             >
-               {blogs.map((post) => (
-                <div 
-                  key={post.id} 
+              {blogs.map((post) => (
+                <div
+                  key={post.id}
                   className="w-full"
                   style={{ flex: `0 0 calc(${100 / (blogs.length > visibleCards ? blogs.length : visibleCards)}% - ${blogs.length > visibleCards ? (32 * (blogs.length - 1)) / blogs.length : 0}px)` }}
                 >

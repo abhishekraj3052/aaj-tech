@@ -2,14 +2,14 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  User, 
-  Mail, 
-  ArrowRight, 
-  ShieldCheck, 
-  Loader2, 
-  CheckCircle2, 
-  ChevronLeft 
+import {
+  User,
+  Mail,
+  ArrowRight,
+  ShieldCheck,
+  Loader2,
+  CheckCircle2,
+  ChevronLeft
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -26,7 +26,7 @@ export default function SignupPage() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:8000/api/auth/signup', {
+      const response = await fetch('https://aaj-tech-backend.onrender.com/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +51,7 @@ export default function SignupPage() {
   if (isSuccess) {
     return (
       <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center p-4">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="max-w-md w-full bg-white border border-gray-100 rounded-[32px] p-10 text-center shadow-xl"
@@ -61,11 +61,11 @@ export default function SignupPage() {
           </div>
           <h2 className="text-3xl font-black text-brand-dark mb-4">Check Your Email!</h2>
           <p className="text-gray-500 font-medium mb-8">
-            We&apos;ve sent a secure link to <span className="text-brand-dark font-bold">{email}</span>. 
+            We&apos;ve sent a secure link to <span className="text-brand-dark font-bold">{email}</span>.
             Please follow the instructions to set your password and activate your account.
           </p>
-          <Link 
-            href="/login" 
+          <Link
+            href="/login"
             className="inline-block w-full bg-brand-dark hover:bg-brand-red text-white font-black py-4 rounded-2xl transition-all"
           >
             Back to Login
@@ -81,13 +81,13 @@ export default function SignupPage() {
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-red/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand-red/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-md w-full bg-white border border-gray-100 rounded-[32px] p-8 md:p-10 shadow-[0_40px_80px_rgba(0,0,0,0.06)] relative z-10"
       >
-        <Link 
-          href="/login" 
+        <Link
+          href="/login"
           className="flex items-center gap-2 text-gray-400 hover:text-brand-red font-bold text-xs mb-8 transition-colors"
         >
           <ChevronLeft size={16} /> Back to Login
@@ -106,8 +106,8 @@ export default function SignupPage() {
             <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-1">Full Name</label>
             <div className="relative group">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-red transition-colors" size={18} />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="John Doe"
@@ -121,8 +121,8 @@ export default function SignupPage() {
             <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-1">Work Email</label>
             <div className="relative group">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-red transition-colors" size={18} />
-              <input 
-                type="email" 
+              <input
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="name@company.com"
@@ -133,7 +133,7 @@ export default function SignupPage() {
           </div>
 
           {error && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               className="bg-brand-red/5 border border-brand-red/10 p-3 rounded-xl"
@@ -142,7 +142,7 @@ export default function SignupPage() {
             </motion.div>
           )}
 
-          <button 
+          <button
             type="submit"
             disabled={isSubmitting}
             className="w-full bg-brand-dark hover:bg-brand-red disabled:bg-gray-200 text-white font-black py-4.5 rounded-2xl shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-3 relative overflow-hidden"

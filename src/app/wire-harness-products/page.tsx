@@ -13,7 +13,7 @@ const WireHarnessProductsPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/harness/');
+        const res = await fetch('https://aaj-tech-backend.onrender.com/api/harness/');
         if (res.ok) {
           const data = await res.json();
           setProducts(data);
@@ -39,16 +39,16 @@ const WireHarnessProductsPage = () => {
       {/* Banner Section */}
       <section className="relative bg-brand-red pt-40 pb-24 overflow-hidden mt-16 lg:mt-0">
         <div className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 opacity-30 pointer-events-none">
-           <Image
-             src="/Wire to board Assemblies.webp"
-             alt="Wire Harness Background"
-             fill
-             className="object-cover"
-           />
-           <div className="absolute inset-0 bg-gradient-to-r from-brand-red via-brand-red/80 to-transparent" />
+          <Image
+            src="/Wire to board Assemblies.webp"
+            alt="Wire Harness Background"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-brand-red via-brand-red/80 to-transparent" />
         </div>
         <div className="container mx-auto px-4 max-w-7xl relative z-10">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
@@ -98,7 +98,7 @@ const WireHarnessProductsPage = () => {
             <div className="space-y-32">
               {products.map((product, index) => (
                 <div key={product.id} className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 items-center`}>
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -107,17 +107,17 @@ const WireHarnessProductsPage = () => {
                   >
                     <div className="relative aspect-square w-full rounded-[2.5rem] overflow-hidden bg-[#f4f4f4] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-gray-100 group cursor-pointer">
                       <Image
-                        src={product.image?.startsWith('http') ? product.image : (product.image?.startsWith('/uploads/') ? `http://localhost:8000${product.image}` : (product.image || "/Wire to board Assemblies.webp"))}
+                        src={product.image?.startsWith('http') ? product.image : (product.image?.startsWith('/uploads/') ? `https://aaj-tech-backend.onrender.com${product.image}` : (product.image || "/Wire to board Assemblies.webp"))}
                         alt={product.title}
                         fill
                         unoptimized
                         className="object-contain p-8 mix-blend-multiply group-hover:scale-105 transition-transform duration-700"
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />
-                      
+
                       {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-brand-dark/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[2px]">
-                        <Link 
+                        <Link
                           href="/contact"
                           className="bg-brand-red text-white px-8 py-3 rounded-full text-sm font-black uppercase tracking-widest transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-2xl hover:bg-white hover:text-brand-red"
                         >
@@ -126,8 +126,8 @@ const WireHarnessProductsPage = () => {
                       </div>
                     </div>
                   </motion.div>
-                  
-                  <motion.div 
+
+                  <motion.div
                     initial={{ opacity: 0, x: index % 2 === 0 ? 50 : -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -135,29 +135,29 @@ const WireHarnessProductsPage = () => {
                     className="w-full lg:w-1/2 space-y-8 text-gray-700 text-lg"
                   >
                     <h3 className="text-4xl font-black text-brand-dark mb-8">{product.title}</h3>
-                    
+
                     <div className="space-y-6">
                       {product.applications && (
                         <div>
-                          <strong className="text-brand-dark font-black text-xl">Applications:</strong> 
+                          <strong className="text-brand-dark font-black text-xl">Applications:</strong>
                           <span className="font-medium ml-2 text-gray-600">{product.applications}</span>
                         </div>
                       )}
-                      
+
                       {product.details && (
                         <div>
-                          <strong className="text-brand-dark font-black text-xl">Details:</strong> 
+                          <strong className="text-brand-dark font-black text-xl">Details:</strong>
                           <span className="font-medium ml-2 text-gray-600">{product.details}</span>
                         </div>
                       )}
-                      
+
                       {product.variants && product.variants.length > 0 && (
                         <div className="bg-gray-50 p-8 rounded-3xl shadow-sm border border-gray-100 mt-8">
                           <strong className="text-brand-dark font-black text-xl mb-6 block">Variants:</strong>
                           <ul className="space-y-4 font-medium text-gray-600">
                             {product.variants.map((variant: string, i: number) => (
                               <li key={i} className="flex items-start gap-4">
-                                <div className="w-2.5 h-2.5 rounded-full bg-brand-red mt-2.5 flex-shrink-0"></div> 
+                                <div className="w-2.5 h-2.5 rounded-full bg-brand-red mt-2.5 flex-shrink-0"></div>
                                 <span>{variant}</span>
                               </li>
                             ))}

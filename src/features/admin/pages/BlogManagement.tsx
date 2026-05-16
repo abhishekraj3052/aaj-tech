@@ -19,7 +19,7 @@ import {
   Upload
 } from 'lucide-react';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
 
 interface BlogPost {
   id: string;
@@ -496,23 +496,22 @@ export default function BlogManagement() {
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
                       <ImageIcon size={12} className="text-brand-red" /> Featured Image
                     </label>
-                    
+
                     <div className="flex flex-col md:flex-row gap-6">
                       {/* Upload Area */}
-                      <div 
+                      <div
                         onClick={() => fileInputRef.current?.click()}
-                        className={`flex-1 border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center gap-4 transition-all cursor-pointer group ${
-                          newBlog.image ? 'border-green-100 bg-green-50/10' : 'border-gray-100 hover:border-brand-red/30 hover:bg-brand-red/5 bg-gray-50/30'
-                        }`}
+                        className={`flex-1 border-2 border-dashed rounded-3xl p-8 flex flex-col items-center justify-center gap-4 transition-all cursor-pointer group ${newBlog.image ? 'border-green-100 bg-green-50/10' : 'border-gray-100 hover:border-brand-red/30 hover:bg-brand-red/5 bg-gray-50/30'
+                          }`}
                       >
-                        <input 
-                          type="file" 
-                          ref={fileInputRef} 
-                          onChange={handleImageUpload} 
-                          className="hidden" 
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          onChange={handleImageUpload}
+                          className="hidden"
                           accept="image/*"
                         />
-                        
+
                         {uploading ? (
                           <div className="flex flex-col items-center gap-3">
                             <Loader2 className="w-10 h-10 text-brand-red animate-spin" />
@@ -520,9 +519,8 @@ export default function BlogManagement() {
                           </div>
                         ) : (
                           <>
-                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${
-                              newBlog.image ? 'bg-green-100 text-green-600' : 'bg-white text-gray-400 group-hover:text-brand-red group-hover:scale-110 shadow-sm'
-                            }`}>
+                            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all ${newBlog.image ? 'bg-green-100 text-green-600' : 'bg-white text-gray-400 group-hover:text-brand-red group-hover:scale-110 shadow-sm'
+                              }`}>
                               {newBlog.image ? <Check size={28} /> : <Upload size={28} />}
                             </div>
                             <div className="text-center">
@@ -542,7 +540,7 @@ export default function BlogManagement() {
                         <div className="w-full md:w-48 h-48 rounded-3xl overflow-hidden bg-gray-50 border border-gray-100 relative group/preview">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={newBlog.image} alt="Preview" className="w-full h-full object-contain" />
-                          <button 
+                          <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
