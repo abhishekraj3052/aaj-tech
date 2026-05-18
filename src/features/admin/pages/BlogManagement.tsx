@@ -77,7 +77,7 @@ export default function BlogManagement() {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("File is too large. Max size is 5MB.");
+      alert("Image is too large!\n\nGuidance: Maximum acceptable image size is 5MB. Please compress your image or choose a smaller one before uploading.");
       return;
     }
 
@@ -94,10 +94,14 @@ export default function BlogManagement() {
         const data = await res.json();
         setNewBlog(prev => ({ ...prev, image: data.url }));
       } else {
-        console.error('Upload failed');
+        const errData = await res.json().catch(() => ({}));
+        const errorMessage = errData.detail || 'Upload failed. Please check backend console for details.';
+        console.error('Upload failed:', errorMessage);
+        alert(`Image upload failed!\n\nPlease make sure:\n- Image size is less than 5MB\n- Format is JPG, PNG, or WEBP\n- Backend/Cloudinary is configured properly\n\nError Details: ${errorMessage}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading image:', error);
+      alert(`Error uploading image!\n\nPlease make sure:\n- Image size is less than 5MB\n- Format is JPG, PNG, or WEBP\n\nError Details: ${error.message || 'Unknown error'}`);
     } finally {
       setUploading(false);
     }

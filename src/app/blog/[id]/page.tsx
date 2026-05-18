@@ -101,11 +101,11 @@ const BlogDetail = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative h-[60vh] md:h-[70vh] flex items-end justify-start overflow-hidden">
+      <section className="relative min-h-[60vh] md:min-h-[70vh] flex items-end justify-start overflow-hidden pt-32 md:pt-40">
         <div className="absolute inset-0 z-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={post.image}
+            src={post.image || 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2070&auto=format&fit=crop'}
             alt={post.title}
             className="w-full h-full object-cover"
           />
