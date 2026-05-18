@@ -147,7 +147,7 @@ export default function Dashboard() {
                       <td className="px-6 py-5">
                         <div className="flex items-center gap-3">
                           <span className={`w-2 h-2 rounded-full shrink-0 ${enq.status === 'new' ? 'bg-brand-red' :
-                              enq.status === 'in progress' ? 'bg-orange-400' : 'bg-green-400'
+                            enq.status === 'in progress' ? 'bg-orange-400' : 'bg-green-400'
                             }`} />
                           <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full ${enq.status === 'new' ? 'bg-red-50 text-brand-red' : 'bg-green-50 text-green-600'
                             }`}>

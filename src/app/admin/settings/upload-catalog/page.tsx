@@ -117,8 +117,8 @@ export default function UploadCatalogPage() {
             onClick={handleUpload}
             disabled={!file || uploading}
             className={`px-12 py-5 rounded-full font-black text-lg transition-all flex items-center gap-3 ${!file || uploading
-                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                : 'bg-brand-red text-white hover:bg-brand-red-hover shadow-xl shadow-brand-red/20 active:scale-95'
+              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+              : 'bg-brand-red text-white hover:bg-brand-red-hover shadow-xl shadow-brand-red/20 active:scale-95'
               }`}
           >
             {uploading ? (

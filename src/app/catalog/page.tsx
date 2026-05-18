@@ -104,8 +104,8 @@ const CatalogPage = () => {
                     key={cat.url}
                     onClick={() => setActiveCatalog(cat)}
                     className={`px-6 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all ${activeCatalog.url === cat.url
-                        ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20'
-                        : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                      ? 'bg-brand-red text-white shadow-lg shadow-brand-red/20'
+                      : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
                       }`}
                   >
                     {cat.name}
