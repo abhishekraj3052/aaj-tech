@@ -56,17 +56,17 @@ const BlogSection = () => {
         const res = await fetch(`${API_BASE}/blogs/`);
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
+          if (Array.isArray(data)) {
             setBlogs(data);
           } else {
-            setBlogs(dummyBlogs);
+            setBlogs([]);
           }
         } else {
-          setBlogs(dummyBlogs);
+          setBlogs([]);
         }
       } catch (error) {
         console.error('Error fetching blogs for home:', error);
-        setBlogs(dummyBlogs);
+        setBlogs([]);
       }
     };
     fetchBlogs();
