@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Reveal } from '@/components/common/Reveal';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
 
 const isValidImageUrl = (url: string) => {
   if (!url) return false;

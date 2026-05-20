@@ -30,7 +30,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
 
 interface Category {
   id: string;
@@ -187,12 +187,12 @@ const CategoryManagement = () => {
       setCategories((items) => {
         const oldIndex = items.findIndex(item => item.id === active.id);
         const newIndex = items.findIndex(item => item.id === over.id);
-        
+
         const newItems = arrayMove(items, oldIndex, newIndex);
-        
+
         // Sync with backend asynchronously
         syncOrder(newItems);
-        
+
         return newItems;
       });
     }
@@ -227,12 +227,12 @@ const CategoryManagement = () => {
         </div>
       ) : (
         /* Categories Grid */
-        <DndContext 
+        <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
         >
-          <SortableContext 
+          <SortableContext
             items={categories.map(c => c.id)}
             strategy={rectSortingStrategy}
           >

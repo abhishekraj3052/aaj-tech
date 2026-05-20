@@ -31,7 +31,7 @@ const Navbar = () => {
     let isMounted = true;
     const fetchCategories = async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/categories/');
+        const res = await fetch('https://aaj-tech-backend.onrender.com/api/categories/');
         if (!res.ok) throw new Error('Failed to fetch');
         const categories = await res.json();
 
