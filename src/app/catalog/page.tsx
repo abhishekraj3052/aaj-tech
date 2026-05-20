@@ -30,7 +30,7 @@ const CatalogPage = () => {
   useEffect(() => {
     const fetchCatalogs = async () => {
       try {
-        const response = await fetch('https://aaj-tech-backend.onrender.com/api/catalog/');
+        const response = await fetch('http://localhost:8000/api/catalog/');
         const data = await response.json();
         setCatalogs(data);
         if (data.length > 0) {
@@ -116,13 +116,13 @@ const CatalogPage = () => {
 
             <div>
               <div className="bg-gray-50 rounded-[4rem] p-8 md:p-20 border border-gray-100 shadow-inner overflow-hidden">
-                <Flipbook pdfUrl={`https://aaj-tech-backend.onrender.com${activeCatalog.url}`} />
+                <Flipbook pdfUrl={`http://localhost:8000${activeCatalog.url}`} />
               </div>
             </div>
 
             <div className="flex justify-center">
               <a
-                href={`https://aaj-tech-backend.onrender.com${activeCatalog.url}`}
+                href={`http://localhost:8000${activeCatalog.url}`}
                 download
                 className="inline-flex items-center gap-4 bg-brand-dark text-white px-12 py-5 rounded-full font-black text-lg shadow-2xl hover:scale-105 transition-all uppercase tracking-widest"
               >

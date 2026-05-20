@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Menu, X, ChevronDown, Search } from 'lucide-react';
 import { cn } from '@/utils/utils';
 import { navItems as initialNavItems } from '@/data/mockData';
 
@@ -13,14 +13,25 @@ const Navbar = () => {
   const [hidden, setHidden] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [navItems, setNavItems] = useState(initialNavItems);
+  const [searchQuery, setSearchQuery] = useState('');
   const pathname = usePathname();
+  const router = useRouter();
   const { scrollY } = useScroll();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsOpen(false);
+      setSearchQuery('');
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
     const fetchCategories = async () => {
       try {
-        const res = await fetch('https://aaj-tech-backend.onrender.com/api/categories/');
+        const res = await fetch('http://localhost:8000/api/categories/');
         if (!res.ok) throw new Error('Failed to fetch');
         const categories = await res.json();
 
@@ -141,13 +152,27 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* CTA */}
+        {/* CTA & Search */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
           className="hidden lg:flex items-center gap-6"
         >
+          {/* Search Box */}
+          <form onSubmit={handleSearch} className="relative group/search">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-brand-red/50 focus:border-brand-red/50 transition-all w-48 lg:w-64"
+            />
+            <button type="submit" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-red transition-colors">
+              <Search size={18} />
+            </button>
+          </form>
+
           <Link
             href="/login"
             className="group relative bg-brand-red hover:bg-brand-red-hover text-white px-10 py-4 rounded-full text-sm font-black transition-all shadow-[0_15px_30px_-5px_rgba(210,35,42,0.4)] active:scale-95 uppercase tracking-widest overflow-hidden"
@@ -211,6 +236,27 @@ const Navbar = () => {
                   )}
                 </motion.div>
               ))}
+
+              {/* Mobile Search */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: navItems.length * 0.1 }}
+                className="mt-4"
+              >
+                <form onSubmit={handleSearch} className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl text-lg focus:outline-none focus:ring-2 focus:ring-brand-red/50 transition-all"
+                  />
+                  <button type="submit" className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-red transition-colors">
+                    <Search size={24} />
+                  </button>
+                </form>
+              </motion.div>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

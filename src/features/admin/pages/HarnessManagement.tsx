@@ -20,7 +20,7 @@ import {
   LayoutGrid,
 } from 'lucide-react';
 
-const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
+const API_BASE = 'http://localhost:8000/api';
 
 interface HarnessProduct {
   id: string;
@@ -69,6 +69,7 @@ export default function HarnessManagement() {
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
   }, []);
 
@@ -200,7 +201,7 @@ export default function HarnessManagement() {
     if (!imagePath) return '/placeholder.png';
     if (imagePath.startsWith('http')) return imagePath;
     if (imagePath.startsWith('/uploads/')) {
-      return `https://aaj-tech-backend.onrender.com${imagePath}`;
+      return `http://localhost:8000${imagePath}`;
     }
     return imagePath; // Local public folder paths
   };
@@ -289,6 +290,7 @@ export default function HarnessManagement() {
                     <td className="px-8 py-8">
                       <div className="flex items-center gap-5">
                         <div className="w-16 h-16 bg-gray-100 rounded-2xl overflow-hidden shrink-0 border border-gray-100 p-2 flex items-center justify-center">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={getImageUrl(product.image)} alt={product.title} className="max-w-full max-h-full object-contain mix-blend-multiply grayscale group-hover:grayscale-0 transition-all duration-500" />
                         </div>
                         <div>
@@ -353,6 +355,7 @@ export default function HarnessManagement() {
               </div>
 
               <div className="w-full h-40 rounded-2xl overflow-hidden mb-6 relative bg-gray-50 flex items-center justify-center p-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={getImageUrl(product.image)}
                   alt={product.title}
@@ -500,6 +503,7 @@ export default function HarnessManagement() {
                     <div className="flex items-center gap-6">
                       <div className="w-32 h-32 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden relative group">
                         {formData.image ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
                           <img src={getImageUrl(formData.image)} alt="Preview" className="w-full h-full object-contain mix-blend-multiply" />
                         ) : (
                           <ImageIcon size={32} className="text-gray-300" />

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Reveal } from '@/components/common/Reveal';
 
-const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
+const API_BASE = 'http://localhost:8000/api';
 
 interface BlogPost {
   id: string;
@@ -70,38 +70,7 @@ const BlogSection = () => {
       }
     };
     fetchBlogs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const dummyBlogs = [
-    {
-      id: '1',
-      title: 'The Future of Industrial Connectors in Automation',
-      excerpt: 'Explore how modern connector technologies are driving efficiency in smart manufacturing and industrial robotics.',
-      category: 'Technology',
-      date: 'April 20, 2024',
-      image: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2070&auto=format&fit=crop',
-      read_time: '5 Min Read'
-    },
-    {
-      id: '2',
-      title: 'Custom Wire Harness Design: Best Practices',
-      excerpt: 'Learn the critical factors in designing high-performance wire harnesses for aerospace and defense applications.',
-      category: 'Design',
-      date: 'April 15, 2024',
-      image: 'https://images.unsplash.com/photo-1555664424-778a1e5e1b48?q=80&w=2070&auto=format&fit=crop',
-      read_time: '7 Min Read'
-    },
-    {
-      id: '3',
-      title: 'Quality Standards in Electronic Component Sourcing',
-      excerpt: 'Why ISO certifications and rigorous testing are essential for ensuring the reliability of industrial electronics.',
-      category: 'Quality',
-      date: 'April 10, 2024',
-      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop',
-      read_time: '4 Min Read'
-    }
-  ];
 
   if (blogs.length === 0) return null;
 

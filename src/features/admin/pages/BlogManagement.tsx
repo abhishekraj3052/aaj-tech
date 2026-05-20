@@ -19,7 +19,7 @@ import {
   Upload
 } from 'lucide-react';
 
-const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
+const API_BASE = 'http://localhost:8000/api';
 
 interface BlogPost {
   id: string;
@@ -99,9 +99,9 @@ export default function BlogManagement() {
         console.error('Upload failed:', errorMessage);
         alert(`Image upload failed!\n\nPlease make sure:\n- Image size is less than 5MB\n- Format is JPG, PNG, or WEBP\n- Backend/Cloudinary is configured properly\n\nError Details: ${errorMessage}`);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error uploading image:', error);
-      alert(`Error uploading image!\n\nPlease make sure:\n- Image size is less than 5MB\n- Format is JPG, PNG, or WEBP\n\nError Details: ${error.message || 'Unknown error'}`);
+      alert(`Error uploading image!\n\nPlease make sure:\n- Image size is less than 5MB\n- Format is JPG, PNG, or WEBP\n\nError Details: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setUploading(false);
     }

@@ -8,11 +8,29 @@ import {
   X,
   Check,
   Type,
-  Loader2
+  Loader2,
+  GripVertical
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
+const API_BASE = 'http://localhost:8000/api';
 
 interface Category {
   id: string;
@@ -20,12 +38,72 @@ interface Category {
   count: number;
 }
 
+const SortableCategory = ({ cat, handleDeleteCategory }: { cat: Category, handleDeleteCategory: (id: string) => void }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id: cat.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 10 : 1,
+  };
+
+  return (
+    <motion.div
+      ref={setNodeRef}
+      style={style}
+      layout
+      className={`bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all group flex items-center justify-between ${isDragging ? 'shadow-2xl ring-2 ring-brand-red opacity-80' : ''}`}
+    >
+      <div className="flex items-center gap-4">
+        {/* Drag handle */}
+        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-brand-red transition-colors p-1">
+          <GripVertical size={20} />
+        </div>
+        <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-brand-red">
+          <Layers size={20} />
+        </div>
+        <div>
+          <h3 className="font-black text-brand-dark">{cat.name}</h3>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{cat.count} Items</p>
+        </div>
+      </div>
+
+      <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
+        <button
+          onClick={() => handleDeleteCategory(cat.id)}
+          className="p-2 hover:bg-red-50 text-brand-red rounded-lg"
+        >
+          <Trash2 size={16} />
+        </button>
+      </div>
+    </motion.div>
+  );
+};
+
 const CategoryManagement = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [newCategoryName, setNewCategoryName] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   // Fetch categories from backend
   const fetchCategories = async () => {
@@ -89,6 +167,37 @@ const CategoryManagement = () => {
     }
   };
 
+  // Reorder sync
+  const syncOrder = async (items: Category[]) => {
+    try {
+      await fetch(`${API_BASE}/categories/reorder`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category_ids: items.map(i => i.id) }),
+      });
+    } catch {
+      console.error('Failed to sync sequence');
+    }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setCategories((items) => {
+        const oldIndex = items.findIndex(item => item.id === active.id);
+        const newIndex = items.findIndex(item => item.id === over.id);
+        
+        const newItems = arrayMove(items, oldIndex, newIndex);
+        
+        // Sync with backend asynchronously
+        syncOrder(newItems);
+        
+        return newItems;
+      });
+    }
+  };
+
   return (
     <div className="space-y-8 pb-12">
       {/* Header Section */}
@@ -118,34 +227,22 @@ const CategoryManagement = () => {
         </div>
       ) : (
         /* Categories Grid */
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-          {categories.map((cat) => (
-            <motion.div
-              layout
-              key={cat.id}
-              className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm hover:shadow-md transition-all group flex items-center justify-between"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-brand-red">
-                  <Layers size={20} />
-                </div>
-                <div>
-                  <h3 className="font-black text-brand-dark">{cat.name}</h3>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{cat.count} Items</p>
-                </div>
-              </div>
-
-              <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
-                <button
-                  onClick={() => handleDeleteCategory(cat.id)}
-                  className="p-2 hover:bg-red-50 text-brand-red rounded-lg"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <DndContext 
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext 
+            items={categories.map(c => c.id)}
+            strategy={rectSortingStrategy}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {categories.map((cat) => (
+                <SortableCategory key={cat.id} cat={cat} handleDeleteCategory={handleDeleteCategory} />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       )}
 
       {/* Simple Add Category Modal */}
