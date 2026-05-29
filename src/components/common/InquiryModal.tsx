@@ -28,8 +28,8 @@ export default function InquiryModal() {
     }
 
     const elapsed = Date.now() - parseInt(sessionStart, 10);
-    // 3 minutes = 3 * 60 * 1000 = 180,000 milliseconds
-    const targetDelay = 180000;
+    // 20 seconds = 20,000 milliseconds
+    const targetDelay = 20000;
     const remainingTime = Math.max(0, targetDelay - elapsed);
 
     const timer = setTimeout(() => {
