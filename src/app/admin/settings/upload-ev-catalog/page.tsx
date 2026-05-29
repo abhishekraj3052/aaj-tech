@@ -31,7 +31,7 @@ export default function UploadEVCatalogPage() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/ev-catalog/upload', {
+      const response = await fetch('https://aaj-tech-backend.onrender.com/api/ev-catalog/upload', {
         method: 'POST',
         body: formData,
       });

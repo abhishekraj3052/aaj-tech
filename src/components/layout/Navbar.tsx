@@ -18,13 +18,51 @@ const Navbar = () => {
   const router = useRouter();
   const { scrollY } = useScroll();
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
-      setIsOpen(false);
-      setSearchQuery('');
+    const query = searchQuery.trim();
+    if (!query) return;
+
+    try {
+      const [prodRes, evRes, harnessRes] = await Promise.all([
+        fetch('https://aaj-tech-backend.onrender.com/api/products/').then(r => r.ok ? r.json() : []),
+        fetch('https://aaj-tech-backend.onrender.com/api/ev/').then(r => r.ok ? r.json() : []),
+        fetch('https://aaj-tech-backend.onrender.com/api/harness/').then(r => r.ok ? r.json() : [])
+      ]);
+
+      const lowerQuery = query.toLowerCase();
+
+      const hasHarnessMatch = harnessRes.some((p: { title?: string; applications?: string; details?: string }) =>
+        (p.title && p.title.toLowerCase().includes(lowerQuery)) ||
+        (p.applications && p.applications.toLowerCase().includes(lowerQuery)) ||
+        (p.details && p.details.toLowerCase().includes(lowerQuery))
+      );
+
+      const hasEvMatch = evRes.some((p: { title?: string; applications?: string; details?: string }) =>
+        (p.title && p.title.toLowerCase().includes(lowerQuery)) ||
+        (p.applications && p.applications.toLowerCase().includes(lowerQuery)) ||
+        (p.details && p.details.toLowerCase().includes(lowerQuery))
+      );
+
+      const hasConnectorMatch = prodRes.some((p: { name?: string; description?: string }) =>
+        (p.name && p.name.toLowerCase().includes(lowerQuery)) ||
+        (p.description && p.description.toLowerCase().includes(lowerQuery))
+      );
+
+      if (hasHarnessMatch && !hasEvMatch && !hasConnectorMatch) {
+        router.push(`/wire-harness-products?search=${encodeURIComponent(query)}`);
+      } else if (hasEvMatch && !hasHarnessMatch && !hasConnectorMatch) {
+        router.push(`/ev-products?search=${encodeURIComponent(query)}`);
+      } else {
+        router.push(`/products?search=${encodeURIComponent(query)}`);
+      }
+    } catch (error) {
+      console.error('Search routing failed:', error);
+      router.push(`/products?search=${encodeURIComponent(query)}`);
     }
+
+    setIsOpen(false);
+    setSearchQuery('');
   };
 
   useEffect(() => {

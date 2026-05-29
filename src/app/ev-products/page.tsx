@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Search, X } from 'lucide-react';
 
 interface EVProduct {
   id: string;
@@ -15,9 +16,12 @@ interface EVProduct {
   image: string;
 }
 
-const EVProductsPage = () => {
+const EVProductsContent = () => {
   const [products, setProducts] = useState<EVProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const searchQuery = searchParams.get('search') || '';
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -35,6 +39,16 @@ const EVProductsPage = () => {
     };
     fetchProducts();
   }, []);
+
+  const filteredProducts = products.filter((product) => {
+    if (!searchQuery) return true;
+    const title = product.title || '';
+    const apps = product.applications || '';
+    const details = product.details || '';
+    return title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      apps.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      details.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   const fadeInUp = {
     initial: { opacity: 0, y: 40 },
@@ -94,19 +108,38 @@ const EVProductsPage = () => {
             </div>
           </motion.div>
 
+          {/* Search Result Banner */}
+          {searchQuery && (
+            <div className="mb-12 flex items-center justify-between bg-brand-light p-6 rounded-3xl border border-brand-red/10 shadow-sm animate-fade-in">
+              <div className="flex items-center gap-3">
+                <Search size={20} className="text-brand-red" />
+                <p className="text-gray-700 font-medium text-lg">
+                  Showing results for &quot;<span className="font-black text-brand-red">{searchQuery}</span>&quot; ({filteredProducts.length} items found)
+                </p>
+              </div>
+              <button
+                onClick={() => router.push('/ev-products')}
+                className="flex items-center gap-2 bg-white hover:bg-brand-red hover:text-white px-5 py-2.5 rounded-full text-sm font-bold transition-all border border-gray-100 shadow-sm text-gray-600 uppercase tracking-wider cursor-pointer"
+              >
+                Clear Search
+                <X size={16} />
+              </button>
+            </div>
+          )}
+
           {loading ? (
             <div className="flex justify-center py-20">
               <div className="w-12 h-12 border-4 border-brand-red border-t-transparent rounded-full animate-spin"></div>
             </div>
-          ) : products.length === 0 ? (
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-20 bg-gray-50 rounded-[40px]">
               <h3 className="text-2xl font-black text-brand-dark mb-4">No products found</h3>
-              <p className="text-gray-400">Please check back later or add products via the administration panel.</p>
+              <p className="text-gray-400">Please check back later or try adjusting your search.</p>
             </div>
           ) : (
             <div className="space-y-32">
-              {products.map((product, index) => (
-                <div key={product.id} className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 items-center`}>
+              {filteredProducts.map((product, index) => (
+                <div key={product.id} id={product.id} className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 items-center scroll-mt-24`}>
                   <motion.div
                     initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -182,6 +215,18 @@ const EVProductsPage = () => {
         </div>
       </section>
     </div>
+  );
+};
+
+const EVProductsPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center py-20 min-h-screen items-center">
+        <div className="w-12 h-12 border-4 border-brand-red border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    }>
+      <EVProductsContent />
+    </Suspense>
   );
 };
 
