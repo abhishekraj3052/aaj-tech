@@ -4,6 +4,7 @@ import React from 'react';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import WhatsAppButton from "@/components/common/WhatsAppButton";
+import InquiryModal from "@/components/common/InquiryModal";
 import { usePathname } from "next/navigation";
 
 export default function LayoutClient({ children }: { children: React.ReactNode }) {
@@ -20,6 +21,7 @@ export default function LayoutClient({ children }: { children: React.ReactNode }
       </main>
       {!isAuthPage && <Footer />}
       {!isAdmin && <WhatsAppButton />}
+      {!isAuthPage && <InquiryModal />}
     </>
   );
 }

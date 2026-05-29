@@ -235,7 +235,7 @@ const ContactPage = () => {
                       <Loader2 className="animate-spin" size={24} />
                     ) : (
                       <>
-                        Deploy Inquiry
+                        Send
                         <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform" />
                       </>
                     )}

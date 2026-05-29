@@ -22,7 +22,7 @@ interface CatalogItem {
   [key: string]: unknown;
 }
 
-const CatalogPage = () => {
+const EVCatalogPage = () => {
   const [activeCatalog, setActiveCatalog] = useState<CatalogItem | null>(null);
   const [catalogs, setCatalogs] = useState<CatalogItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,14 +30,14 @@ const CatalogPage = () => {
   useEffect(() => {
     const fetchCatalogs = async () => {
       try {
-        const response = await fetch('https://aaj-tech-backend.onrender.com/api/catalog/');
+        const response = await fetch('https://aaj-tech-backend.onrender.com/api/ev-catalog/');
         const data = await response.json();
         setCatalogs(data);
         if (data.length > 0) {
           setActiveCatalog(data[0]);
         }
       } catch (error) {
-        console.error('Failed to fetch catalogs:', error);
+        console.error('Failed to fetch EV catalogs:', error);
       } finally {
         setLoading(false);
       }
@@ -62,7 +62,7 @@ const CatalogPage = () => {
               className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-white text-xs font-black tracking-[0.3em] uppercase mb-8"
             >
               <BookOpen size={14} className="text-brand-red" />
-              Resource Center
+              Green Tech Library
             </motion.div>
 
             <motion.h1
@@ -71,7 +71,7 @@ const CatalogPage = () => {
               transition={{ delay: 0.1 }}
               className="text-6xl md:text-8xl font-black text-white leading-none tracking-tighter mb-8"
             >
-              PRODUCT <br />
+              EV SOLUTION <br />
               <span className="text-brand-red">CATALOG</span>
             </motion.h1>
 
@@ -81,7 +81,7 @@ const CatalogPage = () => {
               transition={{ delay: 0.2 }}
               className="text-gray-400 text-xl font-medium max-w-2xl leading-relaxed mx-auto md:mx-0"
             >
-              Experience our latest offerings through our interactive digital catalog. Flip through pages to explore our complete industrial range.
+              Explore our electric vehicle charging connectors, battery pack wire harnesses, and smart power busbars in our interactive digital catalog.
             </motion.p>
           </div>
         </div>
@@ -92,7 +92,7 @@ const CatalogPage = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40">
             <Loader2 className="w-12 h-12 text-brand-red animate-spin mb-4" />
-            <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Loading Catalogs...</p>
+            <p className="text-gray-400 font-bold uppercase tracking-widest text-sm">Loading EV Catalogs...</p>
           </div>
         ) : activeCatalog ? (
           <div className="space-y-16">
@@ -131,12 +131,28 @@ const CatalogPage = () => {
             </div>
           </div>
         ) : (
-          <div className="text-center py-40 bg-gray-50 rounded-[4rem] border border-gray-100">
-            <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm">
-              <Book size={40} className="text-gray-200" />
+          <div className="text-center py-20 max-w-4xl mx-auto bg-gray-50 rounded-[4rem] border border-gray-100 p-12 shadow-sm">
+            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm">
+              <Book size={32} className="text-gray-300" />
             </div>
-            <h3 className="text-2xl font-black text-brand-dark mb-4 uppercase tracking-tight">No Catalog Available</h3>
-            <p className="text-gray-400 font-medium max-w-md mx-auto">We are currently updating our product catalog. Please check back soon or contact our support team.</p>
+            <h3 className="text-3xl font-black text-brand-dark mb-4 uppercase tracking-tight">EV Catalog In Preparation</h3>
+            <p className="text-gray-500 font-medium max-w-xl mx-auto mb-10 text-lg leading-relaxed">
+              We are currently finalizing our dedicated Electric Vehicle connectivity catalog. In the meantime, you can download our complete corporate product catalog, or contact us to receive customized datasheets.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+              <Link
+                href="/catalog"
+                className="inline-flex items-center gap-3 bg-brand-dark text-white px-8 py-4 rounded-full font-black text-sm uppercase tracking-widest hover:bg-brand-red transition-all"
+              >
+                General Catalog <ArrowRight size={16} />
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-3 bg-white border-2 border-brand-dark text-brand-dark px-8 py-4 rounded-full font-black text-sm uppercase tracking-widest hover:bg-brand-light transition-all"
+              >
+                Request Custom Specs <ArrowRight size={16} />
+              </Link>
+            </div>
           </div>
         )}
       </section>
@@ -147,16 +163,16 @@ const CatalogPage = () => {
         <div className="container mx-auto px-4 text-center relative z-10">
           <Reveal direction="up">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tighter">
-              NEED A CUSTOM <br /> <span className="text-brand-red">SPECIFICATION?</span>
+              NEED AUTOMOTIVE <br /> <span className="text-brand-red">COMPLIANCE DATA?</span>
             </h2>
             <p className="text-gray-400 text-xl font-medium mb-12 max-w-2xl mx-auto">
-              Our technical team can provide customized datasheets and drawings for your specific industrial requirements.
+              Our engineering cell provides complete RoHS, REACH, CE, and UL validation reports for EV components on demand.
             </p>
             <Link
               href="/contact"
               className="inline-flex items-center gap-4 bg-brand-red text-white px-16 py-7 rounded-full font-black text-xl shadow-[0_20px_50px_rgba(210,35,42,0.3)] hover:scale-110 transition-all duration-300 uppercase tracking-widest"
             >
-              Contact Support <ArrowRight size={24} />
+              Contact Engineering <ArrowRight size={24} />
             </Link>
           </Reveal>
         </div>
@@ -169,18 +185,18 @@ const CatalogPage = () => {
             {[
               {
                 icon: Shield,
-                title: "Verified Data",
-                desc: "All catalog specifications are verified by our internal quality control team."
+                title: "AIS 156 Compliant",
+                desc: "All battery-compartment wire harnesses are designed in accordance with battery safety regulations."
               },
               {
                 icon: Zap,
-                title: "Live Updates",
-                desc: "Our digital catalog always features the most recent product versions."
+                title: "Thermal Stability",
+                desc: "EV cables rated for high temperature continuous operation from -40°C to +125°C."
               },
               {
                 icon: Globe,
-                title: "Global Compliance",
-                desc: "Our products comply with UL, CE, RoHS, and other international norms."
+                title: "Global Charging Standards",
+                desc: "Supports Type 1, Type 2, CCS2, and GB/T international charging connectors."
               }
             ].map((feature, idx) => (
               <div key={idx} className="flex flex-col items-center text-center">
@@ -198,4 +214,4 @@ const CatalogPage = () => {
   );
 };
 
-export default CatalogPage;
+export default EVCatalogPage;

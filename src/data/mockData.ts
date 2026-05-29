@@ -20,6 +20,15 @@ export const navItems: NavItem[] = [
     ],
   },
   {
+    title: 'EV Solution',
+    href: '/about-ev',
+    items: [
+      { title: 'About EV', href: '/about-ev' },
+      { title: 'Product', href: '/ev-products' },
+      { title: 'Catalog', href: '/ev-catalog' },
+    ],
+  },
+  {
     title: 'About Us',
     href: '/about',
     items: [

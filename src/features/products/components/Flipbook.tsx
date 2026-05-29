@@ -15,7 +15,7 @@ interface FlipbookProps {
 }
 
 const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
-  const [pages, setPages] = useState<string[]>([]);
+  const [pages, setPages] = useState<(string | null)[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [libsLoaded, setLibsLoaded] = useState(false);
@@ -31,6 +31,44 @@ const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
     document.addEventListener('fullscreenchange', onFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', onFullscreenChange);
   }, []);
+
+  const [dimensions, setDimensions] = useState({ width: 550, height: 733 });
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (isFullscreen) {
+        // Calculate fullscreen dimensions
+        const fitHeight = window.innerHeight - 140; // Leave space for controls & page indicator
+        const fitWidth = fitHeight * 0.75; // Aspect ratio of 550 / 733 is ~0.75
+        
+        // Double page width is 2 * fitWidth. Must fit in window.innerWidth - 100
+        const maxSinglePageWidth = (window.innerWidth - 160) / 2;
+        const pageWidth = Math.min(fitWidth, maxSinglePageWidth);
+        const pageHeight = pageWidth / 0.75;
+        
+        setDimensions({ width: Math.floor(pageWidth), height: Math.floor(pageHeight) });
+      } else {
+        // Handle responsive page sizes for standard layout
+        const screenWidth = window.innerWidth;
+        if (screenWidth < 640) {
+          // Mobile screen: Single page width fits container
+          const pageWidth = screenWidth - 40;
+          setDimensions({ width: pageWidth, height: pageWidth / 0.75 });
+        } else if (screenWidth < 1024) {
+          // Tablet screen: Split width
+          const pageWidth = (screenWidth - 80) / 2;
+          setDimensions({ width: pageWidth, height: pageWidth / 0.75 });
+        } else {
+          // Desktop screen
+          setDimensions({ width: 550, height: 733 });
+        }
+      }
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isFullscreen]);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -60,6 +98,7 @@ const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
   }, []);
 
   useEffect(() => {
+    let active = true;
     const loadPdf = async () => {
       if (!libsLoaded || !pdfUrl) return;
       
@@ -67,31 +106,56 @@ const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
       try {
         const loadingTask = pdfjsLib.getDocument(pdfUrl);
         const pdf = await loadingTask.promise;
+        if (!active) return;
+        
         const totalPages = pdf.numPages;
-        const pageImages: string[] = [];
+        
+        // Initialize pages array with placeholders
+        setPages(new Array(totalPages).fill(null));
+        setLoading(false); // Hide the main loader immediately!
 
+        // Load pages in the background progressively
         for (let i = 1; i <= totalPages; i++) {
-          const page = await pdf.getPage(i);
-          const viewport = page.getViewport({ scale: 1.5 });
-          const canvas = document.createElement('canvas');
-          const context = canvas.getContext('2d');
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
+          if (!active) break;
+          
+          try {
+            const page = await pdf.getPage(i);
+            const viewport = page.getViewport({ scale: 1.5 });
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
 
-          if (context) {
-            await page.render({ canvasContext: context, viewport }).promise;
-            pageImages.push(canvas.toDataURL('image/jpeg', 0.8));
+            if (context && active) {
+              await page.render({ canvasContext: context, viewport }).promise;
+              if (active) {
+                const imgData = canvas.toDataURL('image/jpeg', 0.8);
+                setPages(prev => {
+                  const updated = [...prev];
+                  updated[i - 1] = imgData;
+                  return updated;
+                });
+              }
+            }
+          } catch (err) {
+            console.error(`Error rendering page ${i}:`, err);
           }
+          
+          // Yield to browser thread to keep UX smooth
+          await new Promise(resolve => setTimeout(resolve, 50));
         }
-        setPages(pageImages);
       } catch (error) {
         console.error('Error loading PDF:', error);
-      } finally {
-        setLoading(false);
+        if (active) {
+          setLoading(false);
+        }
       }
     };
 
     loadPdf();
+    return () => {
+      active = false;
+    };
   }, [pdfUrl, libsLoaded]);
 
   if (!libsLoaded || loading) {
@@ -104,7 +168,7 @@ const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
   }
 
   return (
-    <div ref={containerRef} className={`flex flex-col items-center justify-center relative ${isFullscreen ? 'bg-gray-100 p-8 overflow-hidden' : ''}`}>
+    <div ref={containerRef} className={`flex flex-col items-center justify-center relative ${isFullscreen ? 'bg-gray-100 p-6 overflow-hidden w-full h-full' : ''}`}>
       {/* Fullscreen Toggle */}
       <button
         onClick={toggleFullscreen}
@@ -116,9 +180,10 @@ const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
 
       <div className="relative group max-w-full overflow-hidden px-4 md:px-0 flex-grow flex items-center justify-center">
         <HTMLFlipBook
-          width={550}
-          height={733}
-          size="stretch"
+          key={`${dimensions.width}-${dimensions.height}`}
+          width={dimensions.width}
+          height={dimensions.height}
+          size="fixed"
           minWidth={315}
           maxWidth={1000}
           minHeight={420}
@@ -143,9 +208,16 @@ const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
           disableFlipByClick={false}
         >
           {pages.map((image, index) => (
-            <div key={index} className="bg-white">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={image} alt={`Page ${index + 1}`} className="w-full h-full object-contain shadow-inner" />
+            <div key={index} className="bg-white w-full h-full flex items-center justify-center relative">
+              {image ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={image} alt={`Page ${index + 1}`} className="w-full h-full object-contain shadow-inner" />
+              ) : (
+                <div className="flex flex-col items-center justify-center w-full h-full bg-gray-50 border border-gray-100 p-8 min-h-[500px] aspect-[0.75]">
+                  <Loader2 className="w-8 h-8 text-brand-red animate-spin mb-2" />
+                  <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px] text-center">Loading page {index + 1}...</p>
+                </div>
+              )}
             </div>
           ))}
         </HTMLFlipBook>
@@ -169,7 +241,7 @@ const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
         </div>
       </div>
 
-      <div className="mt-12 flex items-center gap-8">
+      <div className={`${isFullscreen ? 'mt-6' : 'mt-12'} flex items-center gap-8`}>
         <div className="text-sm font-black text-brand-dark uppercase tracking-widest">
           Page <span className="text-brand-red">{currentPage + 1}</span> of {pages.length}
         </div>

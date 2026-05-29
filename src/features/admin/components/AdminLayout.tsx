@@ -26,6 +26,7 @@ const menuItems = [
   { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
   { icon: Package, label: 'Products', href: '/admin/products' },
   { icon: Layers, label: 'Harness Products', href: '/admin/harness' },
+  { icon: Layers, label: 'EV Products', href: '/admin/ev' },
   { icon: Layers, label: 'Categories', href: '/admin/categories' },
   { icon: ShoppingCart, label: 'Order Inquiries', href: '/admin/orders' },
   { icon: MessageSquare, label: 'General Enquiries', href: '/admin/enquiries' },
@@ -37,6 +38,7 @@ const menuItems = [
     href: '#',
     children: [
       { label: 'Upload Catalog', href: '/admin/settings/upload-catalog' },
+      { label: 'Upload EV Catalog', href: '/admin/settings/upload-ev-catalog' },
       { label: 'Manage Login', href: '/admin/settings/manage-login' },
     ]
   },
