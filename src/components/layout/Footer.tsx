@@ -29,11 +29,16 @@ const Footer = () => {
                 <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0 group-hover:bg-brand-red/20 transition-colors">
                   <MapPin size={18} className="text-brand-red" />
                 </div>
-                <p className="text-sm text-gray-400 font-bold leading-snug">
+                <a
+                  href="https://maps.google.com/maps?q=AAJ%20TECH%20TRADING%20CORPORATION,%20Ground%20Floor,%20Y-39,%20near%20Harkesh%20Nagar%20metro%20station,%20phase-II,%20Sanjay%20Colony,%20Okhla%20Phase%20II,%20Okhla%20Industrial%20Area,%20New%20Delhi,%20Delhi%20110020"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-gray-400 hover:text-brand-red hover:underline font-bold leading-snug transition-colors"
+                >
                   AAJ TECH TRADING CORPORATION, Ground Floor, Y-39, <br />
                   near Harkesh Nagar metro station, phase-II, Sanjay Colony, <br />
                   Okhla Phase II, Okhla Industrial Area, New Delhi, Delhi 110020
-                </p>
+                </a>
               </div>
 
               <div className="flex items-start gap-4 group">
@@ -41,8 +46,16 @@ const Footer = () => {
                   <Phone size={18} className="text-brand-red" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm text-gray-400 font-black">+91-9910009227, +91-9971002657</p>
-                  <p className="text-sm text-gray-400 font-black">011-46575560, 40534531</p>
+                  <p className="text-sm text-gray-400 font-black flex items-center gap-1.5 flex-wrap">
+                    <a href="tel:+919910009227" className="hover:text-brand-red hover:underline transition-colors">+91-9910009227</a>
+                    <span>,</span>
+                    <a href="tel:+919971002657" className="hover:text-brand-red hover:underline transition-colors">+91-9971002657</a>
+                  </p>
+                  <p className="text-sm text-gray-400 font-black flex items-center gap-1.5 flex-wrap">
+                    <a href="tel:+911146575560" className="hover:text-brand-red hover:underline transition-colors">011-46575560</a>
+                    <span>,</span>
+                    <a href="tel:+911140534531" className="hover:text-brand-red hover:underline transition-colors">40534531</a>
+                  </p>
                 </div>
               </div>
 
@@ -51,8 +64,8 @@ const Footer = () => {
                   <Mail size={18} className="text-brand-red" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm text-gray-400 font-black">info@aajtechtrading.com</p>
-                  <p className="text-sm text-gray-400 font-black">accountattc@hotmail.com</p>
+                  <a href="mailto:info@aajtechtrading.com" className="text-sm text-gray-400 hover:text-brand-red font-black block hover:underline transition-colors">info@aajtechtrading.com</a>
+                  <a href="mailto:accountattc@hotmail.com" className="text-sm text-gray-400 hover:text-brand-red font-black block hover:underline transition-colors">accountattc@hotmail.com</a>
                 </div>
               </div>
             </div>

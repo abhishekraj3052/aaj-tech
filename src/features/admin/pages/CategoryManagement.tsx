@@ -9,7 +9,9 @@ import {
   Check,
   Type,
   Loader2,
-  GripVertical
+  GripVertical,
+  Upload,
+  Edit2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -36,9 +38,18 @@ interface Category {
   id: string;
   name: string;
   count: number;
+  image?: string;
 }
 
-const SortableCategory = ({ cat, handleDeleteCategory }: { cat: Category, handleDeleteCategory: (id: string) => void }) => {
+const SortableCategory = ({ 
+  cat, 
+  handleDeleteCategory,
+  handleEditCategory
+}: { 
+  cat: Category, 
+  handleDeleteCategory: (id: string) => void,
+  handleEditCategory: (cat: Category) => void
+}) => {
   const {
     attributes,
     listeners,
@@ -66,8 +77,13 @@ const SortableCategory = ({ cat, handleDeleteCategory }: { cat: Category, handle
         <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing text-gray-300 hover:text-brand-red transition-colors p-1">
           <GripVertical size={20} />
         </div>
-        <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-brand-red">
-          <Layers size={20} />
+        <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-brand-red overflow-hidden border border-gray-100/50">
+          {cat.image ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={cat.image} alt={cat.name} className="w-full h-full object-cover" />
+          ) : (
+            <Layers size={20} />
+          )}
         </div>
         <div>
           <h3 className="font-black text-brand-dark">{cat.name}</h3>
@@ -77,8 +93,16 @@ const SortableCategory = ({ cat, handleDeleteCategory }: { cat: Category, handle
 
       <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-all">
         <button
+          onClick={() => handleEditCategory(cat)}
+          className="p-2 hover:bg-gray-50 text-brand-dark hover:text-brand-red rounded-lg transition-colors"
+          title="Edit Category"
+        >
+          <Edit2 size={16} />
+        </button>
+        <button
           onClick={() => handleDeleteCategory(cat.id)}
           className="p-2 hover:bg-red-50 text-brand-red rounded-lg"
+          title="Delete Category"
         >
           <Trash2 size={16} />
         </button>
@@ -92,6 +116,12 @@ const CategoryManagement = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [newCategoryName, setNewCategoryName] = useState('');
+  const [newCategoryImage, setNewCategoryImage] = useState('');
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editCategoryName, setEditCategoryName] = useState('');
+  const [editCategoryImage, setEditCategoryImage] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const sensors = useSensors(
@@ -124,6 +154,37 @@ const CategoryManagement = () => {
     fetchCategories();
   }, []);
 
+  // Handle image upload for both add and edit
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, mode: 'add' | 'edit') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formDataUpload = new FormData();
+    formDataUpload.append('file', file);
+
+    try {
+      const res = await fetch(`${API_BASE}/upload/image`, {
+        method: 'POST',
+        body: formDataUpload,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        if (mode === 'add') {
+          setNewCategoryImage(data.url);
+        } else {
+          setEditCategoryImage(data.url);
+        }
+      } else {
+        console.error('Upload failed:', data.detail || 'Unknown error');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   // Add category
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,6 +198,7 @@ const CategoryManagement = () => {
         body: JSON.stringify({
           name: newCategoryName.trim(),
           count: 0,
+          image: newCategoryImage,
           icon: 'Layers' // default icon
         }),
       });
@@ -144,6 +206,7 @@ const CategoryManagement = () => {
         const newCat = await res.json();
         setCategories((prev) => [...prev, newCat]);
         setNewCategoryName('');
+        setNewCategoryImage('');
         setShowAddModal(false);
       }
     } catch {
@@ -152,6 +215,49 @@ const CategoryManagement = () => {
       setSubmitting(false);
     }
   };
+
+  // Click handler to open Edit modal
+  const handleEditCategoryClick = (cat: Category) => {
+    setEditingCategory(cat);
+    setEditCategoryName(cat.name);
+    setEditCategoryImage(cat.image || '');
+    setShowEditModal(true);
+  };
+
+  // Update category in backend
+  const handleUpdateCategory = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCategory || !editCategoryName.trim()) return;
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`${API_BASE}/categories/${editingCategory.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: editCategoryName.trim(),
+          count: editingCategory.count,
+          image: editCategoryImage,
+          icon: 'Layers'
+        }),
+      });
+      if (res.ok) {
+        const updatedCat = await res.json();
+        setCategories((prev) =>
+          prev.map((c) => (c.id === editingCategory.id ? updatedCat : c))
+        );
+        setShowEditModal(false);
+        setEditingCategory(null);
+        setEditCategoryName('');
+        setEditCategoryImage('');
+      }
+    } catch {
+      console.error('Failed to update category');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
 
   // Delete category
   const handleDeleteCategory = async (id: string) => {
@@ -238,7 +344,12 @@ const CategoryManagement = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {categories.map((cat) => (
-                <SortableCategory key={cat.id} cat={cat} handleDeleteCategory={handleDeleteCategory} />
+                <SortableCategory 
+                  key={cat.id} 
+                  cat={cat} 
+                  handleDeleteCategory={handleDeleteCategory} 
+                  handleEditCategory={handleEditCategoryClick}
+                />
               ))}
             </div>
           </SortableContext>
@@ -253,7 +364,7 @@ const CategoryManagement = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setShowAddModal(false)}
+              onClick={() => { setShowAddModal(false); setNewCategoryName(''); setNewCategoryImage(''); }}
               className="absolute inset-0 bg-brand-dark/80 backdrop-blur-sm"
             />
 
@@ -266,7 +377,7 @@ const CategoryManagement = () => {
               <div className="p-8">
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-2xl font-black text-brand-dark">New Category</h2>
-                  <button onClick={() => setShowAddModal(false)} className="text-gray-400"><X size={20} /></button>
+                  <button onClick={() => { setShowAddModal(false); setNewCategoryName(''); setNewCategoryImage(''); }} className="text-gray-400"><X size={20} /></button>
                 </div>
 
                 <form className="space-y-6" onSubmit={handleAddCategory}>
@@ -284,15 +395,136 @@ const CategoryManagement = () => {
                     />
                   </div>
 
+                  {/* Category Image Upload */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                      <Upload size={12} className="text-brand-red" /> Category Image
+                    </label>
+                    <div className="relative border-2 border-dashed border-gray-100 rounded-3xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100/50 transition-colors cursor-pointer group">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'add')}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                      />
+                      {uploading ? (
+                        <div className="flex flex-col items-center gap-2">
+                          <Loader2 className="animate-spin text-brand-red" size={24} />
+                          <p className="text-[10px] font-black text-brand-red uppercase tracking-widest">Uploading...</p>
+                        </div>
+                      ) : newCategoryImage ? (
+                        <div className="flex flex-col items-center gap-2">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={newCategoryImage} alt="Category preview" className="w-20 h-20 object-contain rounded-xl" />
+                          <p className="text-[10px] font-black text-green-500 uppercase tracking-widest">Image Uploaded Successfully</p>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2">
+                          <Upload size={24} className="text-gray-400 group-hover:text-brand-red transition-colors" />
+                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest group-hover:text-brand-red transition-colors">Click to Upload Image</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <button
                     type="submit"
-                    disabled={submitting || !newCategoryName.trim()}
+                    disabled={submitting || uploading || !newCategoryName.trim()}
                     className="w-full bg-brand-red hover:bg-brand-dark text-white py-4 rounded-2xl font-black transition-all shadow-lg shadow-brand-red/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? (
                       <><Loader2 size={18} className="animate-spin" /> Adding...</>
                     ) : (
                       <>Add Category <Check size={18} /></>
+                    )}
+                  </button>
+                </form>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Category Modal */}
+      <AnimatePresence>
+        {showEditModal && editingCategory && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => { setShowEditModal(false); setEditingCategory(null); setEditCategoryName(''); setEditCategoryImage(''); }}
+              className="absolute inset-0 bg-brand-dark/80 backdrop-blur-sm"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="relative bg-white w-full max-w-md rounded-[32px] shadow-2xl overflow-hidden"
+            >
+              <div className="p-8">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-2xl font-black text-brand-dark">Edit Category</h2>
+                  <button onClick={() => { setShowEditModal(false); setEditingCategory(null); setEditCategoryName(''); setEditCategoryImage(''); }} className="text-gray-400"><X size={20} /></button>
+                </div>
+
+                <form className="space-y-6" onSubmit={handleUpdateCategory}>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                      <Type size={12} className="text-brand-red" /> Name
+                    </label>
+                    <input
+                      type="text"
+                      autoFocus
+                      value={editCategoryName}
+                      onChange={(e) => setEditCategoryName(e.target.value)}
+                      placeholder="e.g. PCB Connectors"
+                      className="w-full bg-gray-50 border-none rounded-2xl py-4 px-6 font-bold text-brand-dark focus:ring-2 focus:ring-brand-red outline-none transition-all"
+                    />
+                  </div>
+
+                  {/* Category Image Upload */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1 flex items-center gap-2">
+                      <Upload size={12} className="text-brand-red" /> Category Image
+                    </label>
+                    <div className="relative border-2 border-dashed border-gray-100 rounded-3xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100/50 transition-colors cursor-pointer group">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload(e, 'edit')}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                      />
+                      {uploading ? (
+                        <div className="flex flex-col items-center gap-2">
+                          <Loader2 className="animate-spin text-brand-red" size={24} />
+                          <p className="text-[10px] font-black text-brand-red uppercase tracking-widest">Uploading...</p>
+                        </div>
+                      ) : editCategoryImage ? (
+                        <div className="flex flex-col items-center gap-2">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={editCategoryImage} alt="Category preview" className="w-20 h-20 object-contain rounded-xl" />
+                          <p className="text-[10px] font-black text-green-500 uppercase tracking-widest">Image Uploaded Successfully</p>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center gap-2">
+                          <Upload size={24} className="text-gray-400 group-hover:text-brand-red transition-colors" />
+                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest group-hover:text-brand-red transition-colors">Click to Upload Image</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={submitting || uploading || !editCategoryName.trim()}
+                    className="w-full bg-brand-red hover:bg-brand-dark text-white py-4 rounded-2xl font-black transition-all shadow-lg shadow-brand-red/20 flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {submitting ? (
+                      <><Loader2 size={18} className="animate-spin" /> Saving...</>
+                    ) : (
+                      <>Save Changes <Check size={18} /></>
                     )}
                   </button>
                 </form>

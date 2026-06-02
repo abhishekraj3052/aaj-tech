@@ -186,13 +186,13 @@ const AboutPage = () => {
                     <div className="w-10 h-10 bg-brand-red rounded-xl flex items-center justify-center">
                       <Phone size={18} />
                     </div>
-                    <div className="text-sm font-black">+91-9910009227</div>
+                    <a href="tel:+919910009227" className="text-sm font-black hover:text-brand-red hover:underline transition-colors">+91-9910009227</a>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
                       <Mail size={18} />
                     </div>
-                    <div className="text-sm font-black">info@aajtechtrading.com</div>
+                    <a href="mailto:info@aajtechtrading.com" className="text-sm font-black hover:text-brand-red hover:underline transition-colors">info@aajtechtrading.com</a>
                   </div>
                 </div>
               </motion.div>

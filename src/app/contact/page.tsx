@@ -260,10 +260,62 @@ const ContactPage = () => {
                     <item.icon size={22} />
                   </div>
                   <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">{item.title}</h4>
-                  <div className="space-y-1">
-                    {item.values.map(v => (
-                      <p key={v} className="text-brand-dark font-black text-sm leading-tight">{v}</p>
-                    ))}
+                  <div className="space-y-2">
+                    {item.values.map(v => {
+                      if (item.title === 'Email Queries') {
+                        return (
+                          <a
+                            key={v}
+                            href={`mailto:${v}`}
+                            className="text-brand-dark hover:text-brand-red font-black text-sm leading-tight block hover:underline transition-all"
+                          >
+                            {v}
+                          </a>
+                        );
+                      }
+                      if (item.title === 'Voice Support') {
+                        return (
+                          <a
+                            key={v}
+                            href={`tel:${v.replace(/[^0-9+]/g, '')}`}
+                            className="text-brand-dark hover:text-brand-red font-black text-sm leading-tight block hover:underline transition-all"
+                          >
+                            {v}
+                          </a>
+                        );
+                      }
+                      if (item.title === 'WhatsApp Support') {
+                        return (
+                          <a
+                            key={v}
+                            href={`https://wa.me/${v.replace(/[^0-9]/g, '')}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-brand-dark hover:text-brand-red font-black text-sm leading-tight block hover:underline transition-all"
+                          >
+                            {v}
+                          </a>
+                        );
+                      }
+                      if (item.title === 'Headquarters') {
+                        return (
+                          <a
+                            key={v}
+                            href="https://maps.google.com/maps?q=AAJ%20TECH%20TRADING%20CORPORATION,%20Ground%20Floor,%20Y-39,%20near%20Harkesh%20Nagar%20metro%20station,%20phase-II,%20Sanjay%20Colony,%20Okhla%20Phase%20II,%20Okhla%20Industrial%20Area,%20New%20Delhi,%20Delhi%20110020"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-brand-dark hover:text-brand-red font-black text-sm leading-tight block hover:underline transition-all"
+                          >
+                            {v}
+                          </a>
+                        );
+                      }
+                      return (
+                        <p key={v} className="text-brand-dark font-black text-sm leading-tight">
+                          {v}
+                        </p>
+                      );
+                    })}
                   </div>
                 </motion.div>
               ))}

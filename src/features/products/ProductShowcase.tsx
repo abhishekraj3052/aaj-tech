@@ -3,12 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Reveal } from '@/components/common/Reveal';
 
 const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
 
-const isValidImageUrl = (url: string) => {
+const isValidImageUrl = (url?: string) => {
   if (!url) return false;
   if (url.startsWith('/')) return true;
   try {
@@ -19,61 +19,75 @@ const isValidImageUrl = (url: string) => {
   }
 };
 
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  image: string;
-  category_id: string;
-}
-
 interface Category {
   id: string;
   name: string;
+  count: number;
+  image?: string;
+  description?: string;
 }
 
 const ProductShowcase = () => {
-  const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCategories = async () => {
       try {
         setLoading(true);
-        const [prodRes, catRes] = await Promise.all([
-          fetch(`${API_BASE}/products/`),
-          fetch(`${API_BASE}/categories/`)
-        ]);
-        const prodData = await prodRes.json();
-        const catData = await catRes.json();
-        setProducts(prodData);
-        setCategories(catData);
+        const res = await fetch(`${API_BASE}/categories/`);
+        const data = await res.json();
+        // Only show categories that have a valid image uploaded
+        const filtered = data.filter((c: Category) => c.image && c.image.trim() !== '');
+        setCategories(filtered);
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error('Failed to fetch categories:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
+    fetchCategories();
   }, []);
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % products.length);
+    if (categories.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % categories.length);
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
+    if (categories.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + categories.length) % categories.length);
   };
 
-  const [itemsPerView, setItemsPerView] = useState(3);
+  const [cardWidth, setCardWidth] = useState(600);
+  const [cardHeight, setCardHeight] = useState(480);
+  const [gap, setGap] = useState(32);
+  const [padding, setPadding] = useState(128);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) setItemsPerView(1);
-      else if (window.innerWidth < 1024) setItemsPerView(2);
-      else setItemsPerView(3);
+      if (window.innerWidth < 768) {
+        setCardWidth(window.innerWidth * 0.85);
+        setCardHeight(320);
+        setGap(16);
+        setPadding(16);
+      } else if (window.innerWidth < 1024) {
+        setCardWidth(480);
+        setCardHeight(380);
+        setGap(24);
+        setPadding(48);
+      } else if (window.innerWidth < 1280) {
+        setCardWidth(550);
+        setCardHeight(440);
+        setGap(32);
+        setPadding(96);
+      } else {
+        setCardWidth(600);
+        setCardHeight(480);
+        setGap(32);
+        setPadding(128);
+      }
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -81,17 +95,18 @@ const ProductShowcase = () => {
   }, []);
 
   return (
-    <section className="py-32 bg-brand-light relative overflow-hidden">
+    <section className="py-20 md:py-24 bg-brand-light relative overflow-hidden">
       {/* Decorative Text */}
       <div className="absolute top-0 right-0 text-[20vw] font-black text-brand-dark/[0.02] select-none pointer-events-none -translate-y-1/2">
-        PRODUCTS
+        CATEGORIES
       </div>
 
-      <div className="px-4 md:px-12 lg:px-24 xl:px-32 relative z-10 w-full">
-        <div className="text-center max-w-3xl mx-auto mb-24">
+      <div className="relative z-10 w-full">
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto mb-12 px-4">
           <Reveal direction="up">
-            <h2 className="text-5xl md:text-6xl font-black text-brand-dark mb-8">
-              Explore Our <span className="text-brand-red">Solutions</span>
+            <h2 className="text-5xl md:text-6xl font-black text-brand-dark mb-6">
+              Product <span className="text-brand-red">Categories</span>
             </h2>
           </Reveal>
           <Reveal direction="up" delay={0.2}>
@@ -103,95 +118,110 @@ const ProductShowcase = () => {
           <div className="flex justify-center py-20">
             <Loader2 className="animate-spin text-brand-red w-12 h-12" />
           </div>
-        ) : products.length > 0 ? (
-          <div className="relative group/slider">
-            {/* Navigation Arrows */}
-            <button
-              onClick={prevSlide}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 lg:-translate-x-12 z-20 w-16 h-16 bg-white rounded-full shadow-xl flex items-center justify-center text-brand-dark hover:bg-brand-red hover:text-white transition-all opacity-0 group-hover/slider:opacity-100 group-hover/slider:translate-x-0"
-            >
-              <ChevronLeft size={32} />
-            </button>
-            <button
-              onClick={nextSlide}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 lg:translate-x-12 z-20 w-16 h-16 bg-white rounded-full shadow-xl flex items-center justify-center text-brand-dark hover:bg-brand-red hover:text-white transition-all opacity-0 group-hover/slider:opacity-100 group-hover/slider:translate-x-0"
-            >
-              <ChevronRight size={32} />
-            </button>
-
-            {/* Slider Container */}
-            <div className="overflow-hidden px-4">
+        ) : categories.length > 0 ? (
+          <div className="relative w-full overflow-hidden py-4">
+            {/* Slider Container with Left Alignment matching Page Content */}
+            <div className="w-full flex justify-start">
               <motion.div
                 className="flex gap-8"
-                animate={{ x: `calc(-${currentIndex * (100 / itemsPerView)}% - ${currentIndex * (32 / itemsPerView)}px)` }}
+                style={{
+                  width: `${categories.length * (cardWidth + gap) - gap}px`,
+                }}
+                animate={{
+                  x: padding - currentIndex * (cardWidth + gap)
+                }}
                 transition={{ type: "spring", damping: 30, stiffness: 200 }}
               >
-                {products.map((product) => {
-                  const category = categories.find(c => c.id === product.category_id);
+                {categories.map((category) => {
                   return (
-                    <div
-                      key={product.id}
-                      className="min-w-full md:min-w-[calc(50%-16px)] lg:min-w-[calc(33.333%-21.33px)] bg-white rounded-[48px] overflow-hidden shadow-[0_30px_100px_-20px_rgba(0,0,0,0.05)] border border-gray-100 hover:border-brand-red/20 transition-all duration-700 group"
+                    <Link
+                      key={category.id}
+                      href={`/products?category=${category.id}`}
+                      style={{ width: cardWidth, height: cardHeight }}
+                      className="shrink-0 bg-[#F5F5F7] rounded-[48px] overflow-hidden shadow-md border border-gray-200/50 relative group cursor-pointer block transition-all duration-500 hover:shadow-2xl hover:-translate-y-1.5"
                     >
-                      {/* Image Container */}
-                      <div className="relative h-80 overflow-hidden bg-brand-light flex items-center justify-center p-8">
-                        {isValidImageUrl(product.image) ? (
-                          <>
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={product.image}
-                              alt={product.name}
-                              className="max-w-full max-h-full object-contain transition-transform duration-1000 group-hover:scale-110"
-                            />
-                          </>
+                      {/* Category Name in top-left */}
+                      <div className="absolute top-10 left-10 z-10">
+                        <span className="text-2xl md:text-3xl font-black text-brand-red uppercase tracking-tight">
+                          {category.name}
+                        </span>
+                      </div>
+
+                      {/* Tech Circuit Pattern in card background */}
+                      <div className="absolute inset-0 flex items-center justify-center opacity-[0.12] pointer-events-none select-none">
+                        <div className="w-64 h-64 border-2 border-dashed border-brand-red rounded-full animate-[spin_120s_linear_infinite]" />
+                        <div className="absolute w-80 h-80 border border-brand-red rounded-full opacity-50" />
+                        <div className="absolute w-48 h-48 border border-brand-red rounded-full opacity-70" />
+                        <div className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-brand-red to-transparent" />
+                        <div className="absolute h-full w-[1px] bg-gradient-to-b from-transparent via-brand-red to-transparent" />
+                        
+                        {/* Corner tech lines */}
+                        <div className="absolute top-8 left-8 w-4 h-4 border-t-2 border-l-2 border-brand-red/60" />
+                        <div className="absolute top-8 right-8 w-4 h-4 border-t-2 border-r-2 border-brand-red/60" />
+                        <div className="absolute bottom-8 left-8 w-4 h-4 border-b-2 border-l-2 border-brand-red/60" />
+                        <div className="absolute bottom-8 right-8 w-4 h-4 border-b-2 border-r-2 border-brand-red/60" />
+                      </div>
+
+                      {/* Product Image Centered */}
+                      <div className="w-full h-full flex items-center justify-center p-12 relative z-0">
+                        {isValidImageUrl(category.image) ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={category.image}
+                            alt={category.name}
+                            className="max-h-[75%] max-w-[75%] object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.06)] select-none transition-all duration-700 ease-out group-hover:scale-105 group-hover:drop-shadow-[0_25px_50px_rgba(237,28,36,0.15)]"
+                          />
                         ) : (
-                          <span className="text-gray-400 font-bold uppercase tracking-widest text-xs">No Image</span>
+                          <div className="text-gray-400 font-bold uppercase tracking-widest text-xs">
+                            {category.name}
+                          </div>
                         )}
-
-                        <div className="absolute top-8 left-8">
-                          <span className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-xl text-[10px] font-black text-brand-red uppercase tracking-widest shadow-sm">
-                            {category?.name || 'Product'}
-                          </span>
-                        </div>
                       </div>
-
-                      {/* Content */}
-                      <div className="p-10">
-                        <h3 className="text-2xl font-black text-brand-dark mb-4 group-hover:text-brand-red transition-colors duration-300">
-                          {product.name}
-                        </h3>
-                        <p className="text-gray-500 text-base mb-8 line-clamp-2 font-medium min-h-[48px]">
-                          {product.description || 'No description available.'}
-                        </p>
-                        <Link
-                          href={`/products/${product.id}`}
-                          className="inline-flex items-center gap-3 bg-brand-light group-hover:bg-brand-red text-brand-red group-hover:text-white px-8 py-4 rounded-2xl font-black text-xs tracking-widest transition-all duration-500 group/btn"
-                        >
-                          VIEW PRODUCT
-                          <ArrowRight size={16} className="transform group-hover/btn:translate-x-2 transition-transform duration-500" />
-                        </Link>
-                      </div>
-                    </div>
+                    </Link>
                   );
                 })}
               </motion.div>
             </div>
 
-            {/* Dots Pagination */}
-            <div className="flex justify-center gap-3 mt-12">
-              {products.map((_, i) => (
+            {/* Navigation Arrows */}
+            {categories.length > 1 && (
+              <>
                 <button
-                  key={i}
-                  onClick={() => setCurrentIndex(i)}
-                  className={`w-3 h-3 rounded-full transition-all duration-500 ${currentIndex === i ? 'bg-brand-red w-8' : 'bg-gray-200 hover:bg-gray-300'
+                  onClick={prevSlide}
+                  className="absolute left-4 md:left-12 lg:left-24 top-1/2 -translate-y-1/2 z-20 w-16 h-16 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-gray-200/50 flex items-center justify-center text-brand-dark hover:bg-brand-red hover:text-white hover:border-brand-red transition-all duration-300 hover:scale-105 active:scale-95"
+                >
+                  <ChevronLeft size={32} />
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-4 md:right-12 lg:right-24 top-1/2 -translate-y-1/2 z-20 w-16 h-16 bg-white/95 backdrop-blur-sm rounded-full shadow-xl border border-gray-200/50 flex items-center justify-center text-brand-dark hover:bg-brand-red hover:text-white hover:border-brand-red transition-all duration-300 hover:scale-105 active:scale-95"
+                >
+                  <ChevronRight size={32} />
+                </button>
+              </>
+            )}
+
+            {/* Pagination Indicators / Pill Dots */}
+            <div className="flex items-center justify-center gap-3 mt-12 z-20 relative">
+              <div className="bg-white/80 border border-gray-200/80 px-6 py-3 rounded-full shadow-lg flex items-center gap-3.5 backdrop-blur-sm">
+                {categories.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentIndex(i)}
+                    className={`w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 ${
+                      currentIndex === i
+                        ? "bg-brand-red border-brand-red scale-125"
+                        : "bg-transparent border-gray-400/60 hover:bg-gray-200"
                     }`}
-                />
-              ))}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         ) : (
           <div className="text-center py-20 text-gray-400 font-bold uppercase tracking-widest">
-            No products to display
+            No categories to display
           </div>
         )}
       </div>
