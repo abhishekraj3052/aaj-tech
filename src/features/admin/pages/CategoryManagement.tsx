@@ -41,12 +41,12 @@ interface Category {
   image?: string;
 }
 
-const SortableCategory = ({ 
-  cat, 
+const SortableCategory = ({
+  cat,
   handleDeleteCategory,
   handleEditCategory
-}: { 
-  cat: Category, 
+}: {
+  cat: Category,
   handleDeleteCategory: (id: string) => void,
   handleEditCategory: (cat: Category) => void
 }) => {
@@ -344,10 +344,10 @@ const CategoryManagement = () => {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {categories.map((cat) => (
-                <SortableCategory 
-                  key={cat.id} 
-                  cat={cat} 
-                  handleDeleteCategory={handleDeleteCategory} 
+                <SortableCategory
+                  key={cat.id}
+                  cat={cat}
+                  handleDeleteCategory={handleDeleteCategory}
                   handleEditCategory={handleEditCategoryClick}
                 />
               ))}

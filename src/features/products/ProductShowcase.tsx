@@ -154,7 +154,7 @@ const ProductShowcase = () => {
                         <div className="absolute w-48 h-48 border border-brand-red rounded-full opacity-70" />
                         <div className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-brand-red to-transparent" />
                         <div className="absolute h-full w-[1px] bg-gradient-to-b from-transparent via-brand-red to-transparent" />
-                        
+
                         {/* Corner tech lines */}
                         <div className="absolute top-8 left-8 w-4 h-4 border-t-2 border-l-2 border-brand-red/60" />
                         <div className="absolute top-8 right-8 w-4 h-4 border-t-2 border-r-2 border-brand-red/60" />
@@ -208,11 +208,10 @@ const ProductShowcase = () => {
                   <button
                     key={i}
                     onClick={() => setCurrentIndex(i)}
-                    className={`w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 ${
-                      currentIndex === i
-                        ? "bg-brand-red border-brand-red scale-125"
-                        : "bg-transparent border-gray-400/60 hover:bg-gray-200"
-                    }`}
+                    className={`w-3.5 h-3.5 rounded-full border-2 transition-all duration-300 ${currentIndex === i
+                      ? "bg-brand-red border-brand-red scale-125"
+                      : "bg-transparent border-gray-400/60 hover:bg-gray-200"
+                      }`}
                     aria-label={`Go to slide ${i + 1}`}
                   />
                 ))}

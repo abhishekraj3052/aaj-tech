@@ -172,19 +172,37 @@ const Navbar = () => {
               />
 
               {item.items && (
-                <div className="absolute top-full left-0 mt-4 w-64 bg-white border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl overflow-hidden opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 -translate-y-4 group-hover:translate-y-0 backdrop-blur-xl">
-                  <div className="p-3">
-                    {item.items.map((subItem) => (
-                      <Link
-                        key={subItem.title}
-                        href={subItem.href}
-                        className="block px-6 py-4 text-xs text-gray-700 hover:bg-brand-red hover:text-white rounded-2xl transition-all duration-300 font-black uppercase tracking-widest"
-                      >
-                        {subItem.title}
-                      </Link>
-                    ))}
+                item.title === 'Connectors' ? (
+                  <div className="absolute top-full left-0 pt-4 w-[720px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 -translate-y-4 group-hover:translate-y-0 z-50 pointer-events-none group-hover:pointer-events-auto">
+                    <div className="bg-white border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl p-6 backdrop-blur-xl">
+                      <div className="grid grid-cols-3 gap-x-6 gap-y-3">
+                        {item.items.map((subItem) => (
+                          <Link
+                            key={subItem.title}
+                            href={subItem.href}
+                            className="block px-4 py-2.5 text-[11px] text-gray-600 hover:text-brand-red hover:bg-red-50/30 rounded-xl transition-all duration-200 font-bold uppercase tracking-wide leading-relaxed"
+                          >
+                            {subItem.title}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="absolute top-full left-0 pt-4 w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 -translate-y-4 group-hover:translate-y-0 z-50 pointer-events-none group-hover:pointer-events-auto">
+                    <div className="bg-white border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl overflow-hidden backdrop-blur-xl p-3">
+                      {item.items.map((subItem) => (
+                        <Link
+                          key={subItem.title}
+                          href={subItem.href}
+                          className="block px-6 py-4 text-xs text-gray-700 hover:bg-brand-red hover:text-white rounded-2xl transition-all duration-300 font-black uppercase tracking-widest"
+                        >
+                          {subItem.title}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )
               )}
             </motion.div>
           ))}
