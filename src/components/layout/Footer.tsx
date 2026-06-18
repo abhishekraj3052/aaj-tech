@@ -6,9 +6,9 @@ import { MapPin, Phone, Mail, ArrowRight } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-brand-dark text-white pt-24 pb-12 overflow-hidden">
+    <footer className="bg-brand-dark text-white pt-16 md:pt-24 pb-12 overflow-hidden">
       <div className="px-4 md:px-12 lg:px-24 xl:px-32 max-w-[1920px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 mb-20">
           {/* Brand & Description Column */}
           <div className="lg:col-span-5 space-y-8">
             <Link href="/" className="block group">
@@ -16,7 +16,7 @@ const Footer = () => {
               <img 
                 src="/logo.png" 
                 alt="AAJ Tech Trading Logo" 
-                className="h-32 md:h-40 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
+                className="h-20 sm:h-32 md:h-40 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
               />
             </Link>
 
@@ -35,8 +35,8 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className="text-sm text-gray-400 hover:text-brand-red hover:underline font-bold leading-snug transition-colors"
                 >
-                  AAJ TECH TRADING CORPORATION, Ground Floor, Y-39, <br />
-                  near Harkesh Nagar metro station, phase-II, Sanjay Colony, <br />
+                  AAJ TECH TRADING CORPORATION, Ground Floor, Y-39,
+                  near Harkesh Nagar metro station, phase-II, Sanjay Colony,
                   Okhla Phase II, Okhla Industrial Area, New Delhi, Delhi 110020
                 </a>
               </div>

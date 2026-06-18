@@ -24,7 +24,7 @@ const HeroSlider = () => {
   }, []);
 
   return (
-    <section className="relative w-full h-[350px] md:h-[500px] lg:h-[600px] xl:h-[650px] overflow-hidden bg-white mt-[80px]">
+    <section className="relative w-full h-[400px] sm:h-[450px] md:h-[500px] lg:h-[600px] xl:h-[650px] overflow-hidden bg-white mt-[80px]">
       <motion.div 
         style={{ scale, opacity, y }}
         className="absolute inset-0 z-0"
@@ -52,14 +52,14 @@ const HeroSlider = () => {
                   className="object-contain"
                 />
               ) : (
-                <div className="h-full flex flex-col md:flex-row items-center px-8 md:px-24 lg:px-32 gap-12">
+                <div className="h-full flex flex-col md:flex-row items-center px-4 sm:px-8 md:px-24 lg:px-32 gap-6 md:gap-12 justify-center md:justify-start">
                   {/* Left Content */}
-                  <div className="w-full md:w-1/2 text-white order-2 md:order-1 relative z-10">
+                  <div className="w-full md:w-1/2 text-white order-2 md:order-1 relative z-10 text-center md:text-left">
                     <motion.h1
                       initial={{ y: 30, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-                      className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 drop-shadow-xl tracking-tight"
+                      className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-3 md:mb-6 drop-shadow-xl tracking-tight leading-tight"
                     >
                       {slide.title}
                     </motion.h1>
@@ -67,7 +67,7 @@ const HeroSlider = () => {
                       initial={{ y: 20, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       transition={{ delay: 0.5, duration: 0.8 }}
-                      className="text-lg md:text-2xl opacity-90 mb-10 max-w-lg leading-relaxed font-light"
+                      className="text-xs sm:text-base md:text-2xl opacity-90 mb-4 md:mb-10 max-w-lg leading-relaxed font-light line-clamp-2 md:line-clamp-none mx-auto md:mx-0"
                     >
                       {slide.subtitle}
                     </motion.p>
@@ -78,7 +78,7 @@ const HeroSlider = () => {
                     >
                       <Link
                         href={slide.ctaHref}
-                        className="inline-block bg-white text-[#ED1C24] px-10 py-4 rounded-full font-bold shadow-2xl hover:bg-gray-100 transition-all hover:scale-105 active:scale-95"
+                        className="inline-block bg-white text-[#ED1C24] px-6 py-2.5 sm:px-10 sm:py-4 rounded-full font-bold shadow-2xl hover:bg-gray-100 transition-all hover:scale-105 active:scale-95 text-xs sm:text-sm md:text-base"
                       >
                         {slide.ctaText}
                       </Link>
@@ -86,7 +86,7 @@ const HeroSlider = () => {
                   </div>
 
                   {/* Right Image Container */}
-                  <div className="w-full md:w-1/2 h-[45%] md:h-[75%] relative order-1 md:order-2">
+                  <div className="w-full md:w-1/2 h-[35%] sm:h-[45%] md:h-[75%] relative order-1 md:order-2">
                     <motion.div
                       initial={{ scale: 0.8, opacity: 0, rotate: -5 }}
                       animate={{ 

@@ -120,7 +120,7 @@ const ProductsContent = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
           {/* Sidebar Filters */}
-          <div className="lg:sticky lg:top-32 space-y-8 h-fit max-h-[calc(100vh-160px)] overflow-y-auto pr-4">
+          <div className="lg:sticky lg:top-32 space-y-8 h-fit lg:max-h-[calc(100vh-160px)] lg:overflow-y-auto pr-4">
             {/* Search */}
             <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
               <h3 className="font-bold text-brand-dark mb-4">Search Products</h3>
@@ -143,7 +143,7 @@ const ProductsContent = () => {
                 <button
                   onClick={() => handleCategorySelect('all')}
                   className={cn(
-                    "w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all",
+                    "w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all break-words whitespace-normal",
                     selectedCategory === 'all' ? "bg-brand-red text-white" : "hover:bg-brand-light text-gray-600"
                   )}
                 >
@@ -154,7 +154,7 @@ const ProductsContent = () => {
                     key={cat.id}
                     onClick={() => handleCategorySelect(cat.id)}
                     className={cn(
-                      "w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all",
+                      "w-full text-left px-4 py-3 rounded-xl text-sm font-semibold transition-all break-words whitespace-normal",
                       selectedCategory === cat.id ? "bg-brand-red text-white" : "hover:bg-brand-light text-gray-600"
                     )}
                   >

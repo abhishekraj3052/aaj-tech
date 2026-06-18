@@ -76,8 +76,8 @@ const WireHarnessProductsContent = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tight">Products</h1>
-            <div className="flex items-center gap-2 text-white/80 font-bold text-xs md:text-sm tracking-widest uppercase">
+            <h1 className="text-4xl md:text-7xl font-black text-white mb-4 md:mb-6 tracking-tight">Products</h1>
+            <div className="flex items-center gap-2 text-white/80 font-bold text-xs md:text-sm tracking-widest uppercase flex-wrap">
               <Link href="/" className="hover:text-white transition-colors">Home</Link>
               <ChevronRight size={14} />
               <Link href="/about-wire-harness" className="hover:text-white transition-colors">Wire Harness</Link>
@@ -91,11 +91,11 @@ const WireHarnessProductsContent = () => {
       {/* Solutions Section */}
       <section className="relative py-24 bg-white z-20">
         <div className="container mx-auto px-4 max-w-7xl">
-          <motion.div {...fadeInUp} className="mb-20">
-            <h2 className="text-4xl md:text-5xl font-black text-brand-dark mb-8 tracking-tight">
+          <motion.div {...fadeInUp} className="mb-12 md:mb-20">
+            <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-brand-dark mb-6 md:mb-8 tracking-tight">
               Wire Harness Solutions You Can Trust
             </h2>
-            <div className="space-y-6 text-gray-600 text-xl leading-relaxed font-medium max-w-5xl">
+            <div className="space-y-6 text-gray-600 text-base sm:text-xl leading-relaxed font-medium max-w-5xl">
               <p>
                 At <span className="text-brand-red font-black">Aaj Tech Trading Corporation</span>, we understand that every client has unique wire requirements. Therefore, every wire harness solution we offer is tailored to meet your exact technical specifications, connector configurations, and environmental conditions.
               </p>
@@ -137,9 +137,9 @@ const WireHarnessProductsContent = () => {
               <p className="text-gray-400">Please check back later or try adjusting your search.</p>
             </div>
           ) : (
-            <div className="space-y-32">
+            <div className="space-y-16 md:space-y-32">
               {filteredProducts.map((product, index) => (
-                <div key={product.id} id={product.id} className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-16 items-center scroll-mt-24`}>
+                <div key={product.id} id={product.id} className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-8 md:gap-16 items-center scroll-mt-24`}>
                   <motion.div
                     initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -174,32 +174,32 @@ const WireHarnessProductsContent = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    className="w-full lg:w-1/2 space-y-8 text-gray-700 text-lg"
+                    className="w-full lg:w-1/2 space-y-4 md:space-y-8 text-gray-700 text-base md:text-lg"
                   >
-                    <h3 className="text-4xl font-black text-brand-dark mb-8">{product.title}</h3>
+                    <h3 className="text-2xl md:text-4xl font-black text-brand-dark mb-4 md:mb-8">{product.title}</h3>
 
-                    <div className="space-y-6">
+                    <div className="space-y-4 md:space-y-6">
                       {product.applications && (
                         <div>
-                          <strong className="text-brand-dark font-black text-xl">Applications:</strong>
+                          <strong className="text-brand-dark font-black text-lg md:text-xl">Applications:</strong>
                           <span className="font-medium ml-2 text-gray-600">{product.applications}</span>
                         </div>
                       )}
 
                       {product.details && (
                         <div>
-                          <strong className="text-brand-dark font-black text-xl">Details:</strong>
+                          <strong className="text-brand-dark font-black text-lg md:text-xl">Details:</strong>
                           <span className="font-medium ml-2 text-gray-600">{product.details}</span>
                         </div>
                       )}
 
                       {product.variants && product.variants.length > 0 && (
-                        <div className="bg-gray-50 p-8 rounded-3xl shadow-sm border border-gray-100 mt-8">
-                          <strong className="text-brand-dark font-black text-xl mb-6 block">Variants:</strong>
-                          <ul className="space-y-4 font-medium text-gray-600">
+                        <div className="bg-gray-50 p-4 sm:p-8 rounded-3xl shadow-sm border border-gray-100 mt-6 md:mt-8">
+                          <strong className="text-brand-dark font-black text-lg md:text-xl mb-4 md:mb-6 block">Variants:</strong>
+                          <ul className="space-y-3 md:space-y-4 font-medium text-gray-600">
                             {product.variants.map((variant: string, i: number) => (
                               <li key={i} className="flex items-start gap-4">
-                                <div className="w-2.5 h-2.5 rounded-full bg-brand-red mt-2.5 flex-shrink-0"></div>
+                                <div className="w-2.5 h-2.5 rounded-full bg-brand-red mt-2 flex-shrink-0"></div>
                                 <span>{variant}</span>
                               </li>
                             ))}

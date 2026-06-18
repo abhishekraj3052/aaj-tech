@@ -123,9 +123,10 @@ const ProductShowcase = () => {
             {/* Slider Container with Left Alignment matching Page Content */}
             <div className="w-full flex justify-start">
               <motion.div
-                className="flex gap-8"
+                className="flex"
                 style={{
                   width: `${categories.length * (cardWidth + gap) - gap}px`,
+                  gap: `${gap}px`
                 }}
                 animate={{
                   x: padding - currentIndex * (cardWidth + gap)

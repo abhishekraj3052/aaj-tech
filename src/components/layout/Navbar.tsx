@@ -14,9 +14,29 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [navItems, setNavItems] = useState(initialNavItems);
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const pathname = usePathname();
   const router = useRouter();
   const { scrollY } = useScroll();
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  const toggleExpand = (title: string) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,7 +157,7 @@ const Navbar = () => {
             <img
               src="/logo.png"
               alt="AAJ Tech Trading Logo"
-              className="h-24 md:h-28 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
+              className="h-14 sm:h-16 md:h-28 w-auto object-contain group-hover:scale-105 transition-transform duration-500"
             />
           </Link>
         </motion.div>
@@ -251,82 +271,137 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0, y: -20 }}
-            animate={{ opacity: 1, height: 'auto', y: 0 }}
-            exit={{ opacity: 0, height: 0, y: -20 }}
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] as any }}
-            className="lg:hidden bg-white border-t border-gray-100 overflow-hidden shadow-2xl"
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed inset-0 bg-white z-[100] flex flex-col h-screen overflow-hidden lg:hidden"
           >
-            <div className="container mx-auto px-4 py-12 flex flex-col gap-8">
-              {navItems.map((item, index) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "text-3xl font-black block py-2 uppercase tracking-tight",
-                      pathname === item.href ? "text-brand-red" : "text-brand-dark"
-                    )}
-                    onClick={() => !item.items && setIsOpen(false)}
-                  >
-                    {item.title}
-                  </Link>
-                  {item.items && (
-                    <div className="pl-6 mt-4 flex flex-col gap-4 border-l-2 border-brand-red/20 mb-4">
-                      {item.items.map((subItem) => (
-                        <Link
-                          key={subItem.title}
-                          href={subItem.href}
-                          className="text-lg font-bold text-gray-500 hover:text-brand-red transition-colors uppercase tracking-widest"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {subItem.title}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-
-              {/* Mobile Search */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: navItems.length * 0.1 }}
-                className="mt-4"
+            {/* Drawer Header */}
+            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 bg-white shrink-0">
+              <Link href="/" onClick={() => setIsOpen(false)} className="block">
+                <img
+                  src="/logo.png"
+                  alt="AAJ Tech Trading Logo"
+                  className="h-14 w-auto object-contain"
+                />
+              </Link>
+              <button
+                className="p-3 text-brand-dark bg-brand-light rounded-2xl active:scale-90 transition-transform"
+                onClick={() => setIsOpen(false)}
               >
+                <X size={28} />
+              </button>
+            </div>
+
+            {/* Drawer Content */}
+            <div className="flex-1 overflow-y-auto px-6 py-8 flex flex-col gap-6">
+              {/* Mobile Search */}
+              <div>
                 <form onSubmit={handleSearch} className="relative">
                   <input
                     type="text"
                     placeholder="Search products..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-2xl text-lg focus:outline-none focus:ring-2 focus:ring-brand-red/50 transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-2xl text-base focus:outline-none focus:ring-2 focus:ring-brand-red/50 transition-all"
                   />
                   <button type="submit" className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-red transition-colors">
-                    <Search size={24} />
+                    <Search size={20} />
                   </button>
                 </form>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-col gap-4 mt-4"
-              >
+              </div>
+
+              {/* Navigation Items */}
+              <div className="flex flex-col gap-1">
+                {navItems.map((item, index) => {
+                  const hasItems = !!item.items && item.items.length > 0;
+                  return (
+                    <motion.div
+                      key={item.title}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="border-b border-gray-50 py-1"
+                    >
+                      {hasItems ? (
+                        <div>
+                          <button
+                            onClick={() => toggleExpand(item.title)}
+                            className={cn(
+                              "text-lg font-bold flex justify-between items-center w-full py-2 uppercase tracking-wide text-left cursor-pointer",
+                              pathname.startsWith(item.href) && item.href !== '/' ? "text-brand-red" : "text-brand-dark"
+                            )}
+                          >
+                            <span>{item.title}</span>
+                            <ChevronDown
+                              size={18}
+                              className={cn(
+                                "transition-transform duration-300 text-gray-500",
+                                expandedItems[item.title] ? "rotate-180" : ""
+                              )}
+                            />
+                          </button>
+
+                          <AnimatePresence initial={false}>
+                            {expandedItems[item.title] && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.25, ease: "easeInOut" }}
+                                className="overflow-hidden pl-4 flex flex-col gap-1.5 border-l-2 border-brand-red/20 my-1 bg-brand-light/50 rounded-r-xl py-1"
+                              >
+                                {item.href && (
+                                  <Link
+                                    href={item.href}
+                                    className="text-sm font-bold text-gray-500 hover:text-brand-red transition-colors uppercase tracking-wider py-1"
+                                    onClick={() => setIsOpen(false)}
+                                  >
+                                    All {item.title}
+                                  </Link>
+                                )}
+                                {item.items!.map((subItem) => (
+                                  <Link
+                                    key={subItem.title}
+                                    href={subItem.href}
+                                    className="text-sm font-bold text-gray-500 hover:text-brand-red transition-colors uppercase tracking-wider py-1"
+                                    onClick={() => setIsOpen(false)}
+                                  >
+                                    {subItem.title}
+                                  </Link>
+                                ))}
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            "text-lg font-bold block py-2 uppercase tracking-wide",
+                            pathname === item.href ? "text-brand-red" : "text-brand-dark"
+                          )}
+                          onClick={() => setIsOpen(false)}
+                        >
+                          {item.title}
+                        </Link>
+                      )}
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* Sign In CTA */}
+              <div className="mt-auto pt-6 shrink-0">
                 <Link
                   href="/login"
-                  className="bg-brand-red text-white text-center py-6 rounded-3xl font-black text-xl shadow-2xl shadow-brand-red/30 block uppercase tracking-widest"
+                  className="bg-brand-red hover:bg-brand-red-hover text-white text-center py-4 rounded-full font-black text-base shadow-xl shadow-brand-red/25 block uppercase tracking-widest transition-all active:scale-95"
                   onClick={() => setIsOpen(false)}
                 >
                   Sign In
                 </Link>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         )}

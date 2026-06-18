@@ -30,15 +30,15 @@ const CounterItem = ({ value, label, suffix, index }: { value: number, label: st
       transition={{ delay: index * 0.1, duration: 0.8, ease: "easeOut" }}
       className="text-center group"
     >
-      <div className="text-6xl md:text-8xl font-black text-white mb-4 flex justify-center items-center drop-shadow-lg">
+      <div className="text-5xl sm:text-6xl md:text-8xl font-black text-white mb-4 flex justify-center items-center drop-shadow-lg">
         <motion.span>{displayValue}</motion.span>
-        <span className="text-white/40 ml-2 text-4xl md:text-5xl font-black">{suffix}</span>
+        <span className="text-white/40 ml-2 text-2xl sm:text-4xl md:text-5xl font-black">{suffix}</span>
       </div>
       <motion.p 
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : {}}
         transition={{ delay: index * 0.1 + 0.5 }}
-        className="text-white/80 font-black uppercase tracking-[0.4em] text-xs md:text-sm"
+        className="text-white/80 font-black uppercase tracking-[0.2em] sm:tracking-[0.4em] text-[10px] sm:text-xs md:text-sm"
       >
         {label}
       </motion.p>
@@ -56,7 +56,7 @@ const CounterItem = ({ value, label, suffix, index }: { value: number, label: st
 
 const Counters = () => {
   return (
-    <section className="py-32 bg-brand-red relative overflow-hidden">
+    <section className="py-20 md:py-32 bg-brand-red relative overflow-hidden">
       {/* Background Shapes */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <motion.div 
@@ -78,7 +78,7 @@ const Counters = () => {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-16 md:gap-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
           {counters.map((counter, index) => (
             <CounterItem 
               key={counter.id} 
