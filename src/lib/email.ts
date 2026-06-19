@@ -45,3 +45,44 @@ export async function sendAdminWelcomeEmail(toEmail: string, name: string, tempP
     return false;
   }
 }
+
+export async function sendLeadNotificationEmail(lead: { fullName: string; email: string; phone: string; message: string }) {
+  const mailOptions = {
+    from: `"Aaj Tech Chatbot" <${process.env.EMAIL_FROM}>`,
+    to: process.env.EMAIL_USER || 'abhisunil9795@gmail.com',
+    subject: `New Lead Captured: ${lead.fullName}`,
+    html: `
+      <html>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <div style="max-width: 600px; margin: 0 auto; border: 1px solid #eee; padding: 20px; border-radius: 10px;">
+                <h2 style="color: #D2232A;">New Chatbot Lead Captured</h2>
+                <p>Hello Admin,</p>
+                <p>A new visitor inquiry has been captured through the chatbot widget. Here are the details:</p>
+                <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #D2232A;">
+                  <p style="margin: 0 0 10px 0;"><strong>Lead Details:</strong></p>
+                  <p style="margin: 5px 0;"><strong>Name:</strong> ${lead.fullName}</p>
+                  <p style="margin: 5px 0;"><strong>Email:</strong> ${lead.email}</p>
+                  <p style="margin: 5px 0;"><strong>Phone:</strong> ${lead.phone}</p>
+                  <p style="margin: 10px 0 0 0;"><strong>Message:</strong></p>
+                  <p style="margin: 5px 0; font-style: italic; background: #fff; padding: 10px; border-radius: 5px; border: 1px solid #eee;">
+                    ${lead.message}
+                  </p>
+                </div>
+                <p>Please log in to the admin panel at <a href="${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000'}/admin/chatbot" style="color: #D2232A;">Admin Chatbot Dashboard</a> to manage this lead.</p>
+                <p>Best Regards,<br>Aaj Tech Trading Chatbot System</p>
+            </div>
+        </body>
+      </html>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Lead notification email sent.');
+    return true;
+  } catch (error) {
+    console.error('Error sending lead email:', error);
+    return false;
+  }
+}
+

@@ -30,7 +30,6 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ message: 'Admin created successfully', id: result.insertedId });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Setup error details:', error);
     return NextResponse.json({ message: 'Internal server error', error: error.message }, { status: 500 });

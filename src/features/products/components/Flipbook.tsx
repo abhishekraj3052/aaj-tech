@@ -5,9 +5,7 @@ import { Loader2, ChevronLeft, ChevronRight, Maximize, Minimize } from 'lucide-r
 import { motion } from 'framer-motion';
 
 // Dynamic import for libraries that require browser environment
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let HTMLFlipBook: any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let pdfjsLib: any;
 
 interface FlipbookProps {
@@ -20,7 +18,6 @@ const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [libsLoaded, setLibsLoaded] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const flipBookRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -191,7 +188,6 @@ const Flipbook: React.FC<FlipbookProps> = ({ pdfUrl }) => {
           maxShadowOpacity={0.5}
           showCover={true}
           mobileScrollSupport={true}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onFlip={(e: any) => setCurrentPage(e.data)}
           className="shadow-2xl rounded-lg"
           ref={flipBookRef}

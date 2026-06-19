@@ -16,7 +16,8 @@ import {
   X,
   Bell,
   Search,
-  ChevronRight
+  ChevronRight,
+  Bot
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -32,6 +33,7 @@ const menuItems = [
   { icon: MessageSquare, label: 'General Enquiries', href: '/admin/enquiries' },
   { icon: FileText, label: 'Blogs', href: '/admin/blogs' },
   { icon: Users, label: 'Clients', href: '/admin/clients' },
+  { icon: Bot, label: 'Chatbot', href: '/admin/chatbot' },
   {
     icon: Settings,
     label: 'Settings',

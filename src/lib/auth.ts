@@ -21,7 +21,6 @@ export async function verifyPassword(password: string, hashed: string) {
   return await bcrypt.compare(password, hashed);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function createToken(payload: Record<string, any>) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })

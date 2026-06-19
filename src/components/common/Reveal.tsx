@@ -44,7 +44,6 @@ export const Reveal = ({
         transition: { 
           duration: 0.8, 
           delay: delay,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ease: [0.25, 0.1, 0.25, 1] as any, 
         }
       },

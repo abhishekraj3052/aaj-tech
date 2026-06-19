@@ -35,7 +35,6 @@ const AboutWireHarnessPage = () => {
     initial: { opacity: 0, y: 60 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     transition: { duration: 1, ease: [0.22, 1, 0.36, 1] as any }
   };
 
@@ -75,7 +74,6 @@ const AboutWireHarnessPage = () => {
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] as any }}
               className="relative"
             >

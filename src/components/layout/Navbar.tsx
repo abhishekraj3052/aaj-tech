@@ -280,6 +280,7 @@ const Navbar = () => {
             {/* Drawer Header */}
             <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 bg-white shrink-0">
               <Link href="/" onClick={() => setIsOpen(false)} className="block">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/logo.png"
                   alt="AAJ Tech Trading Logo"

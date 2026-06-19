@@ -49,7 +49,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ 
       user: { email: admin.email, name: admin.name, role: 'admin' } 
     });
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Login error:', error);
     return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
