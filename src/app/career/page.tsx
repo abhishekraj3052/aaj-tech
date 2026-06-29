@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 import {
   TrendingUp,
   BookOpen,
@@ -106,7 +106,7 @@ const Hexagon = ({ className, delay = 0 }: { className?: string; delay?: number 
   />
 );
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -117,12 +117,12 @@ const containerVariants = {
   }
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring" as const, stiffness: 100, damping: 20 }
+    transition: { type: "spring", stiffness: 100, damping: 20 }
   }
 };
 
