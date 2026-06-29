@@ -91,6 +91,41 @@ const FAQS = [
   }
 ];
 
+const Hexagon = ({ className, delay = 0 }: { className?: string; delay?: number }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0 }}
+    animate={{ opacity: 0.12, scale: 1 }}
+    transition={{ delay, duration: 3.5, repeat: Infinity, repeatType: "reverse" }}
+    className={`absolute ${className}`}
+    style={{
+      clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+      background: "linear-gradient(135deg, #d2232a 0%, #8b1317 100%)",
+      width: "140px",
+      height: "160px",
+    }}
+  />
+);
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 100, damping: 20 }
+  }
+};
+
 export default function CareerPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
@@ -274,6 +309,10 @@ export default function CareerPage() {
 
       {/* 1. Hero Section */}
       <section className="relative pt-44 pb-28 md:pt-52 md:pb-40 bg-brand-dark flex items-center overflow-hidden">
+        {/* Floating Hexagons */}
+        <Hexagon className="top-24 left-[8%]" delay={0} />
+        <Hexagon className="bottom-16 right-[12%] hidden lg:block" delay={1.2} />
+
         {/* Background Overlay image */}
         <div className="absolute inset-0 opacity-15">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -293,28 +332,39 @@ export default function CareerPage() {
 
         <div className="container mx-auto px-6 md:px-12 lg:px-24 xl:px-32 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
             className="max-w-4xl"
           >
-            <span className="inline-block px-4 py-1.5 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red text-xs font-black uppercase tracking-[0.3em] mb-8">
+            <motion.span
+              variants={itemVariants}
+              className="inline-block px-4 py-1.5 rounded-full bg-brand-red/10 border border-brand-red/20 text-brand-red text-xs font-black uppercase tracking-[0.3em] mb-8"
+            >
               Work with the best
-            </span>
-            <h1 className="text-5xl md:text-8xl font-black text-white mb-8 leading-[1.05] tracking-tighter">
+            </motion.span>
+            <motion.h1
+              variants={itemVariants}
+              className="text-5xl md:text-8xl font-black text-white mb-8 leading-[1.05] tracking-tighter"
+            >
               Join Our <br />
               <span className="text-brand-red">Team.</span>
-            </h1>
-            <p className="text-gray-400 text-lg md:text-xl font-medium max-w-2xl leading-relaxed mb-12">
-              Build your career with AAJ Tech Trading Corporation and become part of an innovative industrial solutions company.
-            </p>
-            <button
-              onClick={() => openingsRef.current?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-brand-red hover:bg-brand-red-hover text-white px-10 py-5 rounded-full font-black text-sm uppercase tracking-widest transition-all shadow-[0_15px_30px_rgba(210,35,42,0.3)] active:scale-95 flex items-center gap-3 group"
+            </motion.h1>
+            <motion.p
+              variants={itemVariants}
+              className="text-gray-400 text-lg md:text-xl font-medium max-w-2xl leading-relaxed mb-12"
             >
-              View Open Positions
-              <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform" />
-            </button>
+              Build your career with AAJ Tech Trading Corporation and become part of an innovative industrial solutions company.
+            </motion.p>
+            <motion.div variants={itemVariants}>
+              <button
+                onClick={() => openingsRef.current?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-brand-red hover:bg-brand-red-hover text-white px-10 py-5 rounded-full font-black text-sm uppercase tracking-widest transition-all shadow-[0_15px_30px_rgba(210,35,42,0.3)] active:scale-95 flex items-center gap-3 group cursor-pointer"
+              >
+                View Open Positions
+                <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform" />
+              </button>
+            </motion.div>
           </motion.div>
         </div>
       </section>
@@ -332,19 +382,22 @@ export default function CareerPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {WHY_JOIN_US.map((item, idx) => (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {WHY_JOIN_US.map((item) => (
               <motion.div
                 key={item.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-100px' }}
-                transition={{ duration: 0.6, delay: idx * 0.1, ease: 'easeOut' }}
+                variants={itemVariants}
                 whileHover={{ y: -8, boxShadow: '0 30px 60px rgba(0,0,0,0.06)' }}
                 className="bg-white p-8 md:p-10 rounded-[32px] border border-gray-100/80 shadow-[0_10px_30px_rgba(0,0,0,0.01)] transition-all duration-500 group cursor-pointer"
               >
                 <div className="w-16 h-16 bg-brand-red/5 rounded-2xl flex items-center justify-center text-brand-red mb-8 group-hover:bg-brand-red group-hover:text-white group-hover:shadow-[0_12px_24px_rgba(237,28,36,0.3)] transition-all duration-500">
-                  <item.icon size={28} />
+                  <item.icon size={28} className="transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12" />
                 </div>
                 <h3 className="text-xl font-black text-brand-dark mb-4 group-hover:text-brand-red transition-colors duration-300">
                   {item.title}
@@ -354,7 +407,7 @@ export default function CareerPage() {
                 </p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
         </div>
       </section>
@@ -405,8 +458,8 @@ export default function CareerPage() {
                   <button
                     onClick={() => setSelectedDeptFilter('All')}
                     className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 border ${selectedDeptFilter === 'All'
-                        ? 'bg-brand-red text-white border-brand-red shadow-[0_10px_25px_rgba(237,28,36,0.22)] scale-[1.03]'
-                        : 'bg-white text-gray-500 hover:text-brand-dark border-gray-200 shadow-[0_5px_15px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_25px_rgba(0,0,0,0.04)] hover:scale-[1.03] cursor-pointer'
+                      ? 'bg-brand-red text-white border-brand-red shadow-[0_10px_25px_rgba(237,28,36,0.22)] scale-[1.03]'
+                      : 'bg-white text-gray-500 hover:text-brand-dark border-gray-200 shadow-[0_5px_15px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_25px_rgba(0,0,0,0.04)] hover:scale-[1.03] cursor-pointer'
                       }`}
                   >
                     All Departments
@@ -419,8 +472,8 @@ export default function CareerPage() {
                         key={dept.id}
                         onClick={() => setSelectedDeptFilter(dept.name)}
                         className={`px-8 py-3 rounded-full text-xs font-black uppercase tracking-wider transition-all duration-300 border ${selectedDeptFilter === dept.name
-                            ? 'bg-brand-red text-white border-brand-red shadow-[0_10px_25px_rgba(237,28,36,0.22)] scale-[1.03]'
-                            : 'bg-white text-gray-500 hover:text-brand-dark border-gray-200 shadow-[0_5px_15px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_25px_rgba(0,0,0,0.04)] hover:scale-[1.03] cursor-pointer'
+                          ? 'bg-brand-red text-white border-brand-red shadow-[0_10px_25px_rgba(237,28,36,0.22)] scale-[1.03]'
+                          : 'bg-white text-gray-500 hover:text-brand-dark border-gray-200 shadow-[0_5px_15px_rgba(0,0,0,0.01)] hover:shadow-[0_10px_25px_rgba(0,0,0,0.04)] hover:scale-[1.03] cursor-pointer'
                           }`}
                       >
                         {dept.name}
@@ -437,53 +490,57 @@ export default function CareerPage() {
                   <p className="text-gray-400 text-sm font-medium">Please explore other departments above or check back soon.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-6 max-w-5xl mx-auto">
-                  {filteredJobs.map((job) => (
-                    <motion.div
-                      key={job.id}
-                      initial={{ opacity: 0, x: -20 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      className="bg-white p-8 md:p-12 rounded-[40px] border border-gray-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.02)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.06)] hover:border-brand-red/10 hover:-translate-y-1 transition-all duration-500 flex flex-col md:flex-row justify-between gap-8 group"
-                    >
-                      <div className="space-y-4 flex-1">
-                        <div className="flex flex-wrap items-center gap-3">
-                          <span className="px-3.5 py-1.5 rounded-full bg-red-50 text-brand-red text-[10px] font-black uppercase tracking-wider border border-brand-red/10">
-                            {job.department}
-                          </span>
-                          <span className="px-3.5 py-1.5 rounded-full bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-wider border border-gray-200/50 flex items-center gap-1">
-                            <MapPin size={10} /> {job.location}
-                          </span>
-                          <span className="px-3.5 py-1.5 rounded-full bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-wider border border-gray-200/50 flex items-center gap-1">
-                            <Clock size={10} /> {job.employmentType}
-                          </span>
+                <motion.div layout className="grid grid-cols-1 gap-6 max-w-5xl mx-auto">
+                  <AnimatePresence mode="popLayout">
+                    {filteredJobs.map((job) => (
+                      <motion.div
+                        key={job.id}
+                        layout
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.3 }}
+                        className="bg-white p-8 md:p-12 rounded-[40px] border border-gray-100 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.02)] hover:shadow-[0_30px_70px_rgba(0,0,0,0.06)] hover:border-brand-red/10 hover:-translate-y-1 transition-all duration-500 flex flex-col md:flex-row justify-between gap-8 group"
+                      >
+                        <div className="space-y-4 flex-1">
+                          <div className="flex flex-wrap items-center gap-3">
+                            <span className="px-3.5 py-1.5 rounded-full bg-red-50 text-brand-red text-[10px] font-black uppercase tracking-wider border border-brand-red/10">
+                              {job.department}
+                            </span>
+                            <span className="px-3.5 py-1.5 rounded-full bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-wider border border-gray-200/50 flex items-center gap-1">
+                              <MapPin size={10} /> {job.location}
+                            </span>
+                            <span className="px-3.5 py-1.5 rounded-full bg-gray-50 text-gray-500 text-[10px] font-black uppercase tracking-wider border border-gray-200/50 flex items-center gap-1">
+                              <Clock size={10} /> {job.employmentType}
+                            </span>
+                          </div>
+
+                          <h3 className="text-2xl md:text-3xl font-black text-brand-dark leading-tight group-hover:text-brand-red transition-colors duration-300">
+                            {job.title}
+                          </h3>
+
+                          <div className="flex flex-wrap gap-x-8 gap-y-2 text-xs font-bold text-gray-400">
+                            <p>Experience: <span className="text-gray-600 font-extrabold">{job.experience}</span></p>
+                            {job.salary && <p>Salary: <span className="text-gray-600 font-extrabold">{job.salary}</span></p>}
+                          </div>
+
+                          <p className="text-gray-500 text-sm font-medium leading-relaxed pt-2">
+                            {job.description}
+                          </p>
                         </div>
 
-                        <h3 className="text-2xl md:text-3xl font-black text-brand-dark leading-tight group-hover:text-brand-red transition-colors duration-300">
-                          {job.title}
-                        </h3>
-
-                        <div className="flex flex-wrap gap-x-8 gap-y-2 text-xs font-bold text-gray-400">
-                          <p>Experience: <span className="text-gray-600 font-extrabold">{job.experience}</span></p>
-                          {job.salary && <p>Salary: <span className="text-gray-600 font-extrabold">{job.salary}</span></p>}
+                        <div className="flex items-center shrink-0">
+                          <button
+                            onClick={() => handleApplyClick(job.title)}
+                            className="w-full md:w-auto bg-brand-dark hover:bg-brand-red text-white font-black px-10 py-5 rounded-2xl text-xs uppercase tracking-widest transition-all hover:shadow-[0_10px_25px_rgba(237,28,36,0.22)] active:scale-95 shrink-0 cursor-pointer"
+                          >
+                            Apply Now
+                          </button>
                         </div>
-
-                        <p className="text-gray-500 text-sm font-medium leading-relaxed pt-2">
-                          {job.description}
-                        </p>
-                      </div>
-
-                      <div className="flex items-center shrink-0">
-                        <button
-                          onClick={() => handleApplyClick(job.title)}
-                          className="w-full md:w-auto bg-brand-dark hover:bg-brand-red text-white font-black px-10 py-5 rounded-2xl text-xs uppercase tracking-widest transition-all hover:shadow-[0_10px_25px_rgba(237,28,36,0.22)] active:scale-95 shrink-0 cursor-pointer"
-                        >
-                          Apply Now
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
               )}
             </>
           )}
@@ -504,20 +561,24 @@ export default function CareerPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {BENEFITS.map((b, idx) => (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-50px' }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          >
+            {BENEFITS.map((b) => (
               <motion.div
                 key={b.title}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
-                className="bg-white p-8 md:p-10 rounded-[32px] border border-gray-100 shadow-sm hover:shadow-lg transition-all"
+                variants={itemVariants}
+                whileHover={{ y: -6, boxShadow: '0 25px 50px rgba(0,0,0,0.05)' }}
+                className="bg-white p-8 md:p-10 rounded-[32px] border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300 group cursor-pointer"
               >
-                <div className="w-12 h-12 bg-brand-red/5 text-brand-red rounded-xl flex items-center justify-center mb-6">
-                  <b.icon size={22} />
+                <div className="w-12 h-12 bg-brand-red/5 text-brand-red rounded-xl flex items-center justify-center mb-6 group-hover:bg-brand-red group-hover:text-white transition-all duration-500">
+                  <b.icon size={22} className="transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6" />
                 </div>
-                <h4 className="text-lg font-black text-brand-dark mb-3">
+                <h4 className="text-lg font-black text-brand-dark mb-3 group-hover:text-brand-red transition-colors duration-300">
                   {b.title}
                 </h4>
                 <p className="text-gray-500 text-xs font-medium leading-relaxed">
@@ -525,7 +586,7 @@ export default function CareerPage() {
                 </p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
         </div>
       </section>
@@ -833,6 +894,7 @@ export default function CareerPage() {
                   <AnimatePresence initial={false}>
                     {isOpen && (
                       <motion.div
+                        key="faq-content"
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}

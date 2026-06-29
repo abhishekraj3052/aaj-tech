@@ -334,8 +334,8 @@ export default function CareerManagement() {
         <button
           onClick={() => setActiveTab('jobs')}
           className={`px-8 py-4 font-black text-sm uppercase tracking-wider border-b-2 transition-all ${activeTab === 'jobs'
-              ? 'border-brand-red text-brand-red bg-brand-red/5'
-              : 'border-transparent text-gray-400 hover:text-brand-dark'
+            ? 'border-brand-red text-brand-red bg-brand-red/5'
+            : 'border-transparent text-gray-400 hover:text-brand-dark'
             }`}
         >
           Job Openings ({jobs.length})
@@ -343,8 +343,8 @@ export default function CareerManagement() {
         <button
           onClick={() => setActiveTab('applications')}
           className={`px-8 py-4 font-black text-sm uppercase tracking-wider border-b-2 transition-all ${activeTab === 'applications'
-              ? 'border-brand-red text-brand-red bg-brand-red/5'
-              : 'border-transparent text-gray-400 hover:text-brand-dark'
+            ? 'border-brand-red text-brand-red bg-brand-red/5'
+            : 'border-transparent text-gray-400 hover:text-brand-dark'
             }`}
         >
           Applications ({applications.length})
@@ -352,8 +352,8 @@ export default function CareerManagement() {
         <button
           onClick={() => setActiveTab('departments')}
           className={`px-8 py-4 font-black text-sm uppercase tracking-wider border-b-2 transition-all ${activeTab === 'departments'
-              ? 'border-brand-red text-brand-red bg-brand-red/5'
-              : 'border-transparent text-gray-400 hover:text-brand-dark'
+            ? 'border-brand-red text-brand-red bg-brand-red/5'
+            : 'border-transparent text-gray-400 hover:text-brand-dark'
             }`}
         >
           Departments ({departments.length})
@@ -416,8 +416,8 @@ export default function CareerManagement() {
                         <td className="px-8 py-6 font-bold text-sm text-gray-600">{job.experience}</td>
                         <td className="px-8 py-6">
                           <span className={`text-[10px] font-black uppercase tracking-[0.1em] px-3.5 py-1.5 rounded-full border ${job.status === 'active'
-                              ? 'bg-green-50 text-green-600 border-green-200'
-                              : 'bg-gray-100 text-gray-400 border-gray-200'
+                            ? 'bg-green-50 text-green-600 border-green-200'
+                            : 'bg-gray-100 text-gray-400 border-gray-200'
                             }`}>
                             {job.status}
                           </span>
@@ -427,8 +427,8 @@ export default function CareerManagement() {
                             <button
                               onClick={() => handleToggleJobStatus(job)}
                               className={`p-2 rounded-xl border transition-all ${job.status === 'active'
-                                  ? 'hover:bg-green-50 text-green-500 border-green-100'
-                                  : 'hover:bg-gray-100 text-gray-400 border-gray-200'
+                                ? 'hover:bg-green-50 text-green-500 border-green-100'
+                                : 'hover:bg-gray-100 text-gray-400 border-gray-200'
                                 }`}
                               title={job.status === 'active' ? "Disable Job" : "Enable Job"}
                             >
@@ -551,10 +551,10 @@ export default function CareerManagement() {
                             disabled={updatingAppId === app.id}
                             onChange={(e) => handleUpdateAppStatus(app.id, e.target.value)}
                             className={`text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-full border cursor-pointer ${app.status === 'Selected' ? 'bg-green-50 text-green-600 border-green-200' :
-                                app.status === 'Rejected' ? 'bg-red-50 text-brand-red border-brand-red/10' :
-                                  app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-600 border-blue-200' :
-                                    app.status === 'Under Review' ? 'bg-yellow-50 text-yellow-600 border-yellow-200' :
-                                      'bg-gray-50 text-gray-600 border-gray-200'
+                              app.status === 'Rejected' ? 'bg-red-50 text-brand-red border-brand-red/10' :
+                                app.status === 'Interview Scheduled' ? 'bg-blue-50 text-blue-600 border-blue-200' :
+                                  app.status === 'Under Review' ? 'bg-yellow-50 text-yellow-600 border-yellow-200' :
+                                    'bg-gray-50 text-gray-600 border-gray-200'
                               }`}
                           >
                             <option value="Applied">Applied</option>

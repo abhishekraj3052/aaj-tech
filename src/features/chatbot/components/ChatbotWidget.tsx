@@ -734,8 +734,8 @@ export default function ChatbotWidget() {
                   type="button"
                   onClick={handleMenuClick}
                   className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shrink-0 active:scale-95 cursor-pointer ${isMenuOpen
-                      ? 'bg-brand-red text-white hover:bg-brand-red-hover shadow-md shadow-brand-red/20'
-                      : 'bg-[#edf2f7] hover:bg-[#e2e8f0] text-[#5a6e85]'
+                    ? 'bg-brand-red text-white hover:bg-brand-red-hover shadow-md shadow-brand-red/20'
+                    : 'bg-[#edf2f7] hover:bg-[#e2e8f0] text-[#5a6e85]'
                     }`}
                   title="Menu"
                 >

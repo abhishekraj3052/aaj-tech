@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
@@ -135,6 +135,97 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const pathname = usePathname();
   const { logout, user } = useAdminAuth();
 
+  const [notifications, setNotifications] = useState<any[]>([]);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchNotifications = async () => {
+      try {
+        const [enqRes, appRes] = await Promise.all([
+          fetch('https://aaj-tech-backend.onrender.com/api/enquiries/').then(r => r.ok ? r.json() : []),
+          fetch('https://aaj-tech-backend.onrender.com/api/career/applications').then(r => r.ok ? r.json() : [])
+        ]);
+
+        if (!isMounted) return;
+
+        // Process General Enquiries (Filter by status "New")
+        const newEnquiries = enqRes
+          .filter((e: any) => e.status === 'New')
+          .map((e: any) => ({
+            id: e.id,
+            title: 'New Enquiry',
+            message: `From ${e.fullName} (${e.inquiryType})`,
+            type: 'enquiry',
+            timestamp: e.createdAt,
+            href: '/admin/enquiries',
+            rawDate: new Date(e.createdAt || Date.now())
+          }));
+
+        // Process Career Applications (Filter by status "Applied")
+        const newApplications = appRes
+          .filter((a: any) => a.status === 'Applied')
+          .map((a: any) => ({
+            id: a.id,
+            title: 'New Career Application',
+            message: `${a.name} applied for ${a.position}`,
+            type: 'career',
+            timestamp: a.createdAt,
+            href: '/admin/career',
+            rawDate: new Date(a.createdAt || Date.now())
+          }));
+
+        // Combine and sort by date descending
+        const combined = [...newEnquiries, ...newApplications].sort(
+          (a, b) => b.rawDate.getTime() - a.rawDate.getTime()
+        );
+
+        // Synchronize with local storage read notification IDs
+        const readIds = JSON.parse(localStorage.getItem('read_notifications') || '[]');
+        const withReadStatus = combined.map(item => ({
+          ...item,
+          read: readIds.includes(item.id)
+        }));
+
+        setNotifications(withReadStatus);
+      } catch (err) {
+        console.error('Failed to load notifications:', err);
+      }
+    };
+
+    fetchNotifications();
+    const interval = setInterval(fetchNotifications, 15000); // refresh every 15s
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
+
+  const markAsRead = (id: string) => {
+    const readIds = JSON.parse(localStorage.getItem('read_notifications') || '[]');
+    if (!readIds.includes(id)) {
+      readIds.push(id);
+      localStorage.setItem('read_notifications', JSON.stringify(readIds));
+    }
+    setNotifications(prev =>
+      prev.map(n => (n.id === id ? { ...n, read: true } : n))
+    );
+  };
+
+  const markAllAsRead = () => {
+    const readIds = JSON.parse(localStorage.getItem('read_notifications') || '[]');
+    notifications.forEach(n => {
+      if (!readIds.includes(n.id)) {
+        readIds.push(n.id);
+      }
+    });
+    localStorage.setItem('read_notifications', JSON.stringify(readIds));
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
+
+  const unreadCount = notifications.filter(n => !n.read).length;
+
   return (
     <div className="min-h-screen bg-gray-50 flex font-sans">
       {/* Desktop Sidebar */}
@@ -211,10 +302,101 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               />
             </div>
 
-            <button className="relative p-2 text-gray-400 hover:text-brand-red transition-colors">
-              <Bell size={22} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-red rounded-full border-2 border-white"></span>
-            </button>
+            {/* Notifications Bell Dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                className={`relative p-2 rounded-xl transition-all cursor-pointer ${isNotificationOpen ? 'bg-brand-red/10 text-brand-red' : 'text-gray-400 hover:text-brand-red'
+                  }`}
+              >
+                <Bell size={22} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-brand-red text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-sm">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {isNotificationOpen && (
+                  <>
+                    {/* Background invisible click-away sheet */}
+                    <div
+                      className="fixed inset-0 z-40 cursor-default"
+                      onClick={() => setIsNotificationOpen(false)}
+                    />
+
+                    <motion.div
+                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 15, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 mt-3 w-80 bg-white rounded-3xl border border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.12)] z-50 overflow-hidden"
+                    >
+                      <div className="p-5 border-b border-gray-50 flex items-center justify-between">
+                        <div>
+                          <h3 className="font-black text-brand-dark text-base">Notifications</h3>
+                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                            {unreadCount} unread updates
+                          </p>
+                        </div>
+                        {unreadCount > 0 && (
+                          <button
+                            onClick={markAllAsRead}
+                            className="text-xs font-black text-brand-red hover:text-brand-red-hover hover:underline cursor-pointer"
+                          >
+                            Mark all read
+                          </button>
+                        )}
+                      </div>
+
+                      <div className="max-h-[300px] overflow-y-auto divide-y divide-gray-50 custom-scrollbar">
+                        {notifications.length === 0 ? (
+                          <div className="py-10 px-5 text-center text-gray-400">
+                            <Bell size={28} className="mx-auto mb-3 opacity-20" />
+                            <p className="text-xs font-bold uppercase tracking-widest">No notifications</p>
+                          </div>
+                        ) : (
+                          notifications.map((n) => (
+                            <Link
+                              key={n.id}
+                              href={n.href}
+                              onClick={() => {
+                                markAsRead(n.id);
+                                setIsNotificationOpen(false);
+                              }}
+                              className={`flex gap-3 p-4 hover:bg-gray-50/80 transition-colors text-left w-full items-start group ${!n.read ? 'bg-brand-red/5' : ''
+                                }`}
+                            >
+                              <div className={`p-2 rounded-xl shrink-0 mt-0.5 ${n.type === 'career' ? 'bg-blue-50 text-blue-600' : 'bg-red-50 text-brand-red'
+                                }`}>
+                                {n.type === 'career' ? <Briefcase size={16} /> : <MessageSquare size={16} />}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between gap-2">
+                                  <p className="text-xs font-black text-brand-dark truncate group-hover:text-brand-red transition-colors">
+                                    {n.title}
+                                  </p>
+                                  {!n.read && (
+                                    <span className="w-1.5 h-1.5 bg-brand-red rounded-full shrink-0" />
+                                  )}
+                                </div>
+                                <p className="text-[11px] text-gray-500 font-medium leading-normal mt-0.5 line-clamp-2">
+                                  {n.message}
+                                </p>
+                                <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider block mt-1">
+                                  {new Date(n.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                </span>
+                              </div>
+                            </Link>
+                          ))
+                        )}
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
 
             <div className="flex items-center gap-3 pl-6 border-l border-gray-100">
               <div className="text-right hidden sm:block">
