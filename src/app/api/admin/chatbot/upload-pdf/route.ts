@@ -4,8 +4,9 @@ import { getSession, type Session } from '@/lib/auth';
 export async function POST(request: Request) {
   try {
     // 1. Check Admin Session
-    const session = await getSession() as Session | null;
+    const session = await getSession(request) as Session | null;
     if (!session || session.role !== 'admin') {
+      console.warn('Upload PDF Unauthorized - session:', session, 'headers cookie:', request.headers.get('cookie'));
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 

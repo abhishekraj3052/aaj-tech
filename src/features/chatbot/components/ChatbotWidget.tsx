@@ -11,7 +11,12 @@ import {
   ArrowRight,
   ExternalLink,
   MessageCircle,
-  Headphones
+  Headphones,
+  Menu,
+  FileText,
+  Package,
+  MapPin,
+  Briefcase
 } from 'lucide-react';
 
 interface Message {
@@ -45,6 +50,7 @@ interface ChatbotSettings {
 export default function ChatbotWidget() {
   const dragControls = useDragControls();
   const [isOpen, setIsOpen] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -279,14 +285,65 @@ export default function ChatbotWidget() {
     }
   };
 
+  const menuOptions = [
+    {
+      title: 'Request a Quote',
+      description: 'Get pricing for pumps & seals',
+      icon: <FileText size={18} />,
+      onClick: () => {
+        handleSuggestionClick('Submit Inquiry');
+        setIsMenuOpen(false);
+      }
+    },
+    {
+      title: 'View Catalog',
+      description: 'Browse industrial categories',
+      icon: <Package size={18} />,
+      onClick: () => {
+        handleSuggestionClick('Show Categories');
+        setIsMenuOpen(false);
+      }
+    },
+    {
+      title: 'Talk to Expert',
+      description: 'Connect with our engineers',
+      icon: <Headphones size={18} />,
+      onClick: () => {
+        handleSendMessage('Connect with sales support');
+        setIsMenuOpen(false);
+      }
+    },
+    {
+      title: 'Visit Office',
+      description: 'Get location & directions',
+      icon: <MapPin size={18} />,
+      onClick: () => {
+        handleSendMessage('Show office location');
+        setIsMenuOpen(false);
+      }
+    },
+    {
+      title: 'WhatsApp Chat',
+      description: 'Instant chat on WhatsApp',
+      icon: <MessageCircle size={18} />,
+      onClick: () => {
+        triggerWhatsAppHandoff();
+        setIsMenuOpen(false);
+      }
+    },
+    {
+      title: 'Careers',
+      description: 'Explore job opportunities',
+      icon: <Briefcase size={18} />,
+      onClick: () => {
+        window.open('/career', '_blank');
+        setIsMenuOpen(false);
+      }
+    }
+  ];
+
   const handleMenuClick = () => {
-    // Show standard navigation suggestion chips on clicking hamburger menu
-    setSuggestionChips([
-      'Products Offered',
-      'Show Categories',
-      'Submit Inquiry',
-      'Contact WhatsApp'
-    ]);
+    setIsMenuOpen(prev => !prev);
   };
 
   return (
@@ -623,16 +680,74 @@ export default function ChatbotWidget() {
               <div ref={messagesEndRef} />
             </div>
 
+            {/* Connect Menu Overlay */}
+            <AnimatePresence>
+              {isMenuOpen && (
+                <motion.div
+                  initial={{ y: '100%', opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: '100%', opacity: 0 }}
+                  transition={{ type: 'spring', damping: 25, stiffness: 220 }}
+                  className="absolute bottom-[84px] left-0 right-0 top-[88px] bg-white z-40 flex flex-col border-t border-gray-100"
+                >
+                  {/* Connect Menu Header */}
+                  <div className="px-5 py-4 flex items-center justify-between border-b border-gray-100 shrink-0 animate-fade-in">
+                    <span className="text-xs font-black text-slate-500 uppercase tracking-widest">Connect</span>
+                    <button
+                      onClick={() => setIsMenuOpen(false)}
+                      className="w-7 h-7 rounded-full bg-gray-50 hover:bg-gray-100 text-gray-400 hover:text-gray-600 flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+
+                  {/* Connect Menu Grid */}
+                  <div className="flex-grow overflow-y-auto p-4 select-none">
+                    <div className="grid grid-cols-2 gap-3">
+                      {menuOptions.map((opt, i) => (
+                        <button
+                          key={i}
+                          onClick={opt.onClick}
+                          className="p-4 bg-white hover:bg-brand-red/5 border border-gray-200/60 hover:border-brand-red/40 rounded-2xl flex flex-col items-start text-left transition-all active:scale-[0.98] cursor-pointer group shadow-sm hover:shadow-md"
+                        >
+                          <div className="w-10 h-10 rounded-xl bg-brand-red/5 group-hover:bg-brand-red/10 text-brand-red flex items-center justify-center mb-3 transition-colors shrink-0">
+                            {opt.icon}
+                          </div>
+                          <span className="text-xs font-black text-brand-dark group-hover:text-brand-red transition-colors block mb-1">
+                            {opt.title}
+                          </span>
+                          <span className="text-[10px] text-gray-500 font-bold leading-normal">
+                            {opt.description}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* Input Footer: Styled capsule matching the reference image */}
             <div className="p-4 bg-white border-t border-gray-100 shrink-0 flex flex-col items-center">
-              <div className="bg-[#F4F7FA] rounded-full p-1.5 flex items-center shadow-inner w-full border border-gray-100 pl-4">
+              <div className="bg-[#F4F7FA] rounded-full p-1.5 flex items-center shadow-inner w-full border border-gray-100 pl-2 pr-1.5">
+                <button
+                  type="button"
+                  onClick={handleMenuClick}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all shrink-0 active:scale-95 cursor-pointer ${isMenuOpen
+                      ? 'bg-brand-red text-white hover:bg-brand-red-hover shadow-md shadow-brand-red/20'
+                      : 'bg-[#edf2f7] hover:bg-[#e2e8f0] text-[#5a6e85]'
+                    }`}
+                  title="Menu"
+                >
+                  <Menu size={16} />
+                </button>
 
                 <form
                   onSubmit={e => {
                     e.preventDefault();
                     handleSendMessage(inputValue);
                   }}
-                  className="flex-1 flex items-center"
+                  className="flex-1 flex items-center min-w-0"
                 >
                   <input
                     type="text"
@@ -640,14 +755,14 @@ export default function ChatbotWidget() {
                     value={inputValue}
                     onChange={e => setInputValue(e.target.value)}
                     disabled={loading}
-                    className="flex-grow bg-transparent border-none py-2 px-3 text-xs font-bold text-brand-dark focus:ring-0 outline-none placeholder-gray-400"
+                    className="flex-grow bg-transparent border-none py-2 px-3 text-xs font-bold text-brand-dark focus:ring-0 outline-none placeholder-gray-400 min-w-0"
                   />
                   <button
                     type="submit"
                     disabled={!inputValue.trim() || loading}
-                    className="w-10 h-10 bg-brand-red hover:bg-brand-dark text-white rounded-full flex items-center justify-center shadow-md transition-all shrink-0 disabled:opacity-40"
+                    className="w-10 h-10 bg-brand-red hover:bg-brand-red-hover text-white rounded-full flex items-center justify-center shadow-lg shadow-brand-red/20 transition-all shrink-0 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   >
-                    <Send size={15} className="ml-0.5" />
+                    <Send size={16} className="text-white" />
                   </button>
                 </form>
               </div>

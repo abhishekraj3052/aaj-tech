@@ -39,9 +39,26 @@ export async function verifyToken(token: string) {
   }
 }
 
-export async function getSession() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get('admin_token')?.value;
+export async function getSession(req?: Request) {
+  let token: string | undefined;
+  try {
+    const cookieStore = await cookies();
+    token = cookieStore.get('admin_token')?.value;
+  } catch (error) {
+    console.error('Error reading cookies from cookies():', error);
+  }
+
+  // Fallback: parse from Request headers if not found via cookies()
+  if (!token && req) {
+    const cookieHeader = req.headers.get('cookie');
+    if (cookieHeader) {
+      const match = cookieHeader.match(/(?:^|;)\s*admin_token\s*=\s*([^;]+)/);
+      if (match) {
+        token = match[1];
+      }
+    }
+  }
+
   if (!token) return null;
   return await verifyToken(token);
 }

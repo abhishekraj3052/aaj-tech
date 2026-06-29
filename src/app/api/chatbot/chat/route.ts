@@ -479,14 +479,14 @@ export async function POST(request: Request) {
       } else {
         // 2. Check categories list trigger
         const categoryIntents = [
-          "show product categories", "show categories", "list categories", "view categories", 
-          "what categories", "product categories", "categories", 
-          "type of product", "types of product", "type of products", "types of products", 
+          "show product categories", "show categories", "list categories", "view categories",
+          "what categories", "product categories", "categories",
+          "type of product", "types of product", "type of products", "types of products",
           "kind of product", "kinds of product", "kind of products", "kinds of products",
           "what kind of product", "what kinds of products", "what kind of products",
           "how many type", "how many types", "how many product", "how many products",
           "range of product", "range of products", "product range", "product ranges",
-          "what products", "products offered", "show products", "list products", 
+          "what products", "products offered", "show products", "list products",
           "view products", "what products", "products", "show me the product",
           "show me the products", "show me product", "show me products", "show product",
           "list product", "view product", "product", "all products", "all product",
@@ -512,7 +512,7 @@ export async function POST(request: Request) {
         // 3. Check products list trigger
         if (!replyText) {
           const productIntents = [
-            "products offered", "show products", "list products", "view products", 
+            "products offered", "show products", "list products", "view products",
             "what products", "products", "types of products", "kinds of products",
             "product range", "product ranges", "range of products", "show me the product",
             "show me the products", "show me product", "show me products", "show product",

@@ -23,8 +23,9 @@ function parseCSVLine(line: string): string[] {
 
 export async function POST(request: Request) {
   try {
-    const session = await getSession() as Session | null;
+    const session = await getSession(request) as Session | null;
     if (!session || session.role !== 'admin') {
+      console.warn('Upload FAQs Unauthorized - session:', session, 'headers cookie:', request.headers.get('cookie'));
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 

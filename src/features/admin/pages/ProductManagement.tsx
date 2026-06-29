@@ -653,11 +653,14 @@ export default function ProductManagement() {
               </button>
               <div className="flex items-center gap-2">
                 {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  let pageNum = i + 1;
-                  if (totalPages > 5 && currentPage > 3) {
-                    pageNum = currentPage - 3 + i + 1;
-                    if (pageNum > totalPages) pageNum = totalPages - (4 - i);
+                  let startPage = 1;
+                  if (totalPages > 5) {
+                    startPage = Math.max(1, currentPage - 2);
+                    if (startPage + 4 > totalPages) {
+                      startPage = totalPages - 4;
+                    }
                   }
+                  const pageNum = startPage + i;
                   return (
                     <button
                       key={pageNum}
@@ -746,12 +749,14 @@ export default function ProductManagement() {
 
             <div className="flex items-center gap-2">
               {Array.from({ length: Math.min(3, totalPages) }, (_, i) => {
-                let pageNum = i + 1;
-                if (totalPages > 3 && currentPage > 2) {
-                  pageNum = currentPage - 1;
-                  if (pageNum + 2 > totalPages) pageNum = totalPages - 2;
-                  pageNum += i;
+                let startPage = 1;
+                if (totalPages > 3) {
+                  startPage = Math.max(1, currentPage - 1);
+                  if (startPage + 2 > totalPages) {
+                    startPage = totalPages - 2;
+                  }
                 }
+                const pageNum = startPage + i;
                 return (
                   <button
                     key={pageNum}

@@ -38,6 +38,34 @@ export default function Home() {
       {/* 5.5 Blog Section */}
       <BlogSection />
 
+      {/* 5.7 Career Teaser Section (Simple Card Style) */}
+      <Reveal direction="up" delay={0.1} width="100%">
+        <section className="py-12 bg-white relative overflow-hidden">
+          <div className="px-4 md:px-12 lg:px-24 xl:px-32 relative z-10 w-full">
+            <div className="bg-gradient-to-br from-brand-red via-[#c5151c] to-brand-dark rounded-[32px] md:rounded-[60px] p-6 sm:p-12 md:p-24 text-center relative overflow-hidden shadow-[0_40px_100px_rgba(237,28,36,0.15)]">
+              {/* Background Glows */}
+              <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
+              <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2"></div>
+
+              <div className="relative z-10 max-w-4xl mx-auto">
+                <h2 className="text-2xl sm:text-4xl md:text-6xl xl:text-7xl font-black text-white mb-6 md:mb-8 leading-tight">
+                  Ready to build your career with us?
+                </h2>
+                <p className="text-red-100 text-sm sm:text-base md:text-xl mb-8 md:mb-12 leading-relaxed opacity-90">
+                  Join our team of innovative thinkers and shape the future of industrial B2B connectivity.
+                </p>
+                <div className="flex justify-center items-center w-full">
+                  <Link href="/career" className="group relative bg-white hover:bg-gray-100 text-brand-dark px-8 py-3.5 sm:px-12 sm:py-5 rounded-full font-black text-sm sm:text-lg transition-all shadow-[0_20px_40px_rgba(255,255,255,0.15)] active:scale-95 text-center w-full sm:w-auto">
+                    View Career
+                    <span className="absolute inset-0 rounded-full bg-black/5 scale-0 group-hover:scale-100 transition-transform duration-500 origin-center"></span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </Reveal>
+
       {/* 6. Final Call to Action */}
       <section className="py-20 md:py-32 bg-brand-light relative overflow-hidden">
         <div className="px-4 md:px-12 lg:px-24 xl:px-32 relative z-10 w-full">

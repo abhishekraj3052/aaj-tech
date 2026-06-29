@@ -52,3 +52,41 @@ export interface Counter {
   suffix: string;
 }
 
+export interface Job {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  experience: string;
+  employmentType: string;
+  salary?: string;
+  description: string;
+  status: 'active' | 'inactive';
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface CareerApplication {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  department?: string;
+  position: string;
+  experience: string;
+  currentCTC: string;
+  expectedCTC: string;
+  resume: string;
+  message?: string;
+  status: 'Applied' | 'Under Review' | 'Interview Scheduled' | 'Selected' | 'Rejected';
+  createdAt?: string;
+}
+
+export interface Department {
+  id: string;
+  name: string;
+  createdAt?: string;
+}
+
+
+
