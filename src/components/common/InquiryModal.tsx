@@ -64,7 +64,7 @@ export default function InquiryModal() {
     };
 
     try {
-      const res = await fetch('http://localhost:8000/api/enquiries/', {
+      const res = await fetch('https://aaj-tech-backend.onrender.com/api/enquiries/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),

@@ -141,8 +141,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const fetchNotifications = async () => {
       try {
         const [enqRes, appRes] = await Promise.all([
-          fetch('http://localhost:8000/api/enquiries/').then(r => r.ok ? r.json() : []),
-          fetch('http://localhost:8000/api/career/applications').then(r => r.ok ? r.json() : [])
+          fetch('https://aaj-tech-backend.onrender.com/api/enquiries/').then(r => r.ok ? r.json() : []),
+          fetch('https://aaj-tech-backend.onrender.com/api/career/applications').then(r => r.ok ? r.json() : [])
         ]);
 
         if (!isMounted) return;

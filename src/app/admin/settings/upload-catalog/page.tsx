@@ -31,7 +31,7 @@ export default function UploadCatalogPage() {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8000/api/catalog/upload', {
+      const response = await fetch('https://aaj-tech-backend.onrender.com/api/catalog/upload', {
         method: 'POST',
         body: formData,
       });
