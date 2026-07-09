@@ -19,7 +19,7 @@ import {
   Upload
 } from 'lucide-react';
 
-const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
+const API_BASE = 'http://localhost:8000/api';
 
 interface BlogPost {
   id: string;

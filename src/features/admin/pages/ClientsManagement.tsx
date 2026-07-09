@@ -39,7 +39,7 @@ export const ClientManagement = () => {
 
   const fetchClients = async () => {
     try {
-      const res = await fetch('https://aaj-tech-backend.onrender.com/api/clients/');
+      const res = await fetch('http://localhost:8000/api/clients/');
       const data = await res.json();
       setClients(data);
     } catch {
@@ -92,8 +92,8 @@ export const ClientManagement = () => {
     try {
       const method = editingClient ? 'PUT' : 'POST';
       const url = editingClient
-        ? `https://aaj-tech-backend.onrender.com/api/clients/${editingClient.id}`
-        : 'https://aaj-tech-backend.onrender.com/api/clients/';
+        ? `http://localhost:8000/api/clients/${editingClient.id}`
+        : 'http://localhost:8000/api/clients/';
 
       const res = await fetch(url, {
         method,
@@ -115,7 +115,7 @@ export const ClientManagement = () => {
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this client?')) return;
     try {
-      const res = await fetch(`https://aaj-tech-backend.onrender.com/api/clients/${id}`, {
+      const res = await fetch(`http://localhost:8000/api/clients/${id}`, {
         method: 'DELETE'
       });
       if (res.ok) {

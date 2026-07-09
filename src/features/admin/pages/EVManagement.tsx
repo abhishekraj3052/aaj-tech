@@ -20,7 +20,7 @@ import {
   LayoutGrid,
 } from 'lucide-react';
 
-const API_BASE = 'https://aaj-tech-backend.onrender.com/api';
+const API_BASE = 'http://localhost:8000/api';
 
 interface EVProduct {
   id: string;
@@ -201,7 +201,7 @@ export default function EVManagement() {
     if (!imagePath) return '/placeholder.png';
     if (imagePath.startsWith('http')) return imagePath;
     if (imagePath.startsWith('/uploads/')) {
-      return `https://aaj-tech-backend.onrender.com${imagePath}`;
+      return `http://localhost:8000${imagePath}`;
     }
     return imagePath; // Local public folder paths
   };
