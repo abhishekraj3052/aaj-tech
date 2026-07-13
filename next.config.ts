@@ -14,14 +14,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: '/backend-api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL || 'https://aaj-tech-backend.onrender.com'}/api/:path*`,
-      },
-    ];
-  },
 };
 
 export default nextConfig;
